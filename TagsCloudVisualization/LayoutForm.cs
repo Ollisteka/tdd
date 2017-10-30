@@ -10,15 +10,15 @@ using System.Windows.Forms;
 
 namespace TagsCloudVisualization
 {
-	public partial class Form1 : Form
+	public partial class LayoutForm : Form
 	{
 		public CircularCloudLayouter Layouter;
-		public Form1()
+		public LayoutForm()
 		{
 			InitializeComponent();
 			Width = 800;
 			Height = 800;
-			Layouter = new CircularCloudLayouter(new Point(100, 100));
+			Layouter = new CircularCloudLayouter(new Point(250, 250));
 			var rnd = new Random();
 			for (int i = 0; i < 30; i++)
 			{
@@ -43,6 +43,7 @@ namespace TagsCloudVisualization
 				else
 					e.Graphics.FillRectangle(new SolidBrush(randomColor), Layouter.Rectangles[i]);
 			}
+			e.Graphics.FillEllipse(new SolidBrush(Color.Red), Layouter.Center.X, Layouter.Center.Y, 10, 10);
 
 		}
 	}

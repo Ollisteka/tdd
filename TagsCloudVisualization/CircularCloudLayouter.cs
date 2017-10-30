@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace TagsCloudVisualization
 {
 	public class CircularCloudLayouter
 	{
-		private double radius;
-		private readonly Random rnd = new Random();
-
 		public CircularCloudLayouter(Point center)
 		{
 			Center = center;
 			Rectangles = new List<Rectangle>();
 		}
 
+		private int radius;
 		public Point Center { get; }
 		public List<Rectangle> Rectangles { get; }
 
@@ -25,43 +24,40 @@ namespace TagsCloudVisualization
 			if (rectangleSize.Height <= 0 || rectangleSize.Width <= 0)
 				throw new ArgumentException("Height and width should be non negative!");
 
-			var recToAdd = ShiftReactangle(new Rectangle(Center, rectangleSize));
+			var recToAdd = PlaceRectangle(new Rectangle(Center, rectangleSize));
+			if (Rectangles.Count == 0)
+				recToAdd = ShiftFirstRectangle(recToAdd);
 			Rectangles.Add(recToAdd);
 			return recToAdd;
 		}
 
-		private Rectangle ShiftReactangle(Rectangle recToAdd)
+		private Rectangle ShiftFirstRectangle(Rectangle rectangle)
 		{
-			var center = recToAdd.Location;
-			radius = Rectangles.Count == 0 ? 0 : 0.5 * Math.Min(recToAdd.Width, recToAdd.Height);
+			var height = rectangle.Height;
+			var width = rectangle.Width;
+			var rightCenter = new Point(Center.X - width / 2, Center.Y - height / 2);
+			return new Rectangle(rightCenter, rectangle.Size);
+		}
 
+		private Rectangle PlaceRectangle(Rectangle recToAdd)
+		{
+			radius -= radius/5;
 			while (true)
 			{
-				var prevX = -1;
-				var prevY = -1;
-				for (var degree = 0; degree < 360; degree += 5)
+				for (var degree = 0; degree < 360; degree += 3)
 				{
-					var rad = ((double)degree / Math.PI) * 180.0;
-					var shiftX = (int)(center.X + radius * Math.Cos(rad));
-					var shiftY = (int)(center.Y + radius * Math.Sin(rad));
-					if (prevX == shiftX && prevY == shiftY)
-						continue;
-					prevX = shiftX;
-					prevY = shiftY;
+					var rad = (degree / Math.PI) * 180.0;
+					var shiftX = (int)(recToAdd.Location.X + radius * Math.Cos(rad));
+					var shiftY = (int)(recToAdd.Location.Y + radius * Math.Sin(rad));
 
-					var possibleRectangle = new Rectangle(new Point(center.X + shiftX, center.Y + shiftY),
+					var possibleRectangle = new Rectangle(new Point(shiftX, shiftY),
 						recToAdd.Size);
 
-					int prev;
-					for (prev = 0; prev < Rectangles.Count; prev++)
-						if (possibleRectangle.IntersectsWith(Rectangles[prev]))
-							break;
+					if (Rectangles.Count(rectangle => rectangle.IntersectsWith(possibleRectangle)) == 0)
+						 return possibleRectangle;
 
-					if (prev == Rectangles.Count)
-						return possibleRectangle;
-					
 				}
-				radius += 5;
+				radius += 1;
 			}
 		}
 	}

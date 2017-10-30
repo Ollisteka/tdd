@@ -1,42 +1,59 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using NUnit.Framework;
 using FluentAssertions;
+using NUnit.Framework;
 
 namespace TagsCloudVisualization
 {
 	[TestFixture]
 	public class CircularCloudLayouter_Should
 	{
-		public CircularCloudLayouter Layouter;
-
 		[SetUp]
 		public void SetUp()
 		{
 			Layouter = new CircularCloudLayouter(new Point(0, 0));
 		}
 
-		[Test]
-		public void ShouldHaveCenter_AtPointZero_WhenConstructed()
+		public CircularCloudLayouter Layouter;
+
+		[TestCase(5, 2, 10, 1, 4, 2, ExpectedResult = 3)]
+		[TestCase(5, 2, 6, 3, 10, 1, 4, 2, ExpectedResult = 4)]
+		[TestCase(5, 2, 6, 3, 10, 1, 4, 2, 4, 1, 7, 4, 6, 1, 9, 5, 13, 10, ExpectedResult = 9)]
+		public int AddManyRectangles(params int[] dimensions)
 		{
-			Layouter.Center.Should().Be(new Point(0, 0));
+			for (var i = 0; i < dimensions.Length; i += 2)
+				Layouter.PutNextRectangle(new Size(dimensions[i], dimensions[i + 1]));
+			return Layouter.Rectangles.Count;
+		}
+
+		[TestCase(1, -2, TestName = "NegativeWidth")]
+		[TestCase(-2, 1, TestName = "NegativeHeight")]
+		[TestCase(0, 2, TestName = "ZeroWidth")]
+		[TestCase(2, 0, TestName = "ZeroHeight")]
+		[TestCase(2, 5, TestName = "HeightIsBiggerThanScale")]
+		public void Throw(int width, int height)
+		{
+			Assert.Throws<ArgumentException>(() => Layouter.PutNextRectangle(new Size(width, height)));
 		}
 
 		[Test]
-		public void ShouldHaveZeroTags_WhenConstructed()
+		[Timeout(10000)]
+		public void AddALotOfRandomRectangles()
 		{
-			Layouter.Rectangles.Count.Should().Be(0);
+			var rnd = new Random();
+			for (var i = 1; i < 500; i++)
+			{
+				var number = rnd.Next(1, 30);
+				Layouter.PutNextRectangle(new Size(number + 1, number));
+			}
 		}
 
 		[Test]
-		public void ShouldHaveOneTag_AfterPutNext()
+		[Timeout(10000)]
+		public void AddALotOfRectangles()
 		{
-			var size = new Size(20, 10);
-			var rectangle = Layouter.PutNextRectangle(size);
-			Layouter.Rectangles.Count.Should().Be(1);
-			rectangle.Location.Should().Be(new Point(0, 0));
-			rectangle.Size.Should().Be(size);
+			for (var i = 1; i < 200; i++)
+				Layouter.PutNextRectangle(new Size(i + 1, i));
 		}
 
 		[Test]
@@ -50,43 +67,33 @@ namespace TagsCloudVisualization
 			rectangleOne.IntersectsWith(rectangleTwo).Should().BeFalse();
 		}
 
-		[Test, Timeout(1000)]
-		public void AddALotOfRectangles()
+		[Test]
+		public void ShouldHaveCenter_AtPointZero_WhenConstructed()
 		{
-			for (var i = 1; i < 1000; i++)
-				Layouter.PutNextRectangle(new Size(i + 1, i));
-			
-		}
-		[Test, Timeout(1000)]
-		public void AddALotOfRandomRectangles()
-		{
-			var rnd = new Random();
-			for (int i = 1; i < 1000; i++)
-			{
-				var number = rnd.Next(1, 30);
-				Layouter.PutNextRectangle(new Size(number + 1, number));
-			}
-		}
-		[TestCase(5, 2, 10, 1, 4, 2, ExpectedResult = 3)]
-		[TestCase(5, 2, 6, 3, 10, 1, 4, 2, ExpectedResult = 4)]
-		[TestCase(5, 2, 6, 3, 10, 1, 4, 2, 4, 1, 7, 4, 6, 1, 9, 5, 13, 10, ExpectedResult = 9)]
-		public int AddManyRectangles(params int[] dimensions)
-		{
-			for (int i = 0; i < dimensions.Length; i += 2)
-				Layouter.PutNextRectangle(new Size(dimensions[i], dimensions[i + 1]));
-			return Layouter.Rectangles.Count;
-
-		}
-		[TestCase(1, -2, TestName = "NegativeWidth")]
-		[TestCase(-2, 1, TestName = "NegativeHeight")]
-		[TestCase(0, 2, TestName = "ZeroWidth")]
-		[TestCase(2, 0, TestName = "ZeroHeight")]
-		[TestCase(2, 5, TestName = "HeightIsBiggerThanScale")]
-		public void Throw(int width, int height)
-		{
-			Assert.Throws<ArgumentException>(() => Layouter.PutNextRectangle(new Size(width, height)));
+			Layouter.Center.Should().Be(new Point(0, 0));
 		}
 
+		[Test]
+		public void ShouldHaveOneRectangle_AfterPutNext()
+		{
+			var size = new Size(20, 10);
+			Layouter.PutNextRectangle(size);
+			Layouter.Rectangles.Count.Should().Be(1);
+		}
 
+		[Test]
+		public void FirstRectangleLocation_ShouldBeShifted()
+		{
+			var size = new Size(20, 10);
+			var rectangle = Layouter.PutNextRectangle(size);
+			rectangle.Location.Should().Be(new Point(-10, -5));
+			rectangle.Size.Should().Be(size);
+		}
+
+		[Test]
+		public void ShouldHaveEmtyRectanglesList_WhenConstructed()
+		{
+			Layouter.Rectangles.Count.Should().Be(0);
+		}
 	}
 }
