@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -37,25 +38,31 @@ namespace TagsCloudVisualization
 		}
 
 		[Test]
-		[Timeout(10000)]
-		public void AddALotOfRandomRectangles()
+		public void AllRectangles_FitBigCircle()
 		{
 			var rnd = new Random();
-			for (var i = 1; i < 500; i++)
+			for (int i = 0; i < 10; i++)
 			{
-				var number = rnd.Next(1, 30);
-				Layouter.PutNextRectangle(new Size(number + 1, number));
+				var height = rnd.Next(15, 60);
+				var width = rnd.Next(height, 150);
+				Layouter.PutNextRectangle(new Size(width, height));
 			}
+
+			var totalWidth = Layouter.Rectangles.Sum(rectangle => rectangle.Width);
+			var totalHeight = Layouter.Rectangles.Sum(rectangle => rectangle.Height);
+			var excpectedRadius = Math.Sqrt((totalHeight * totalWidth) / Math.PI);
+
+			var actualMaxRadius = Layouter.Rectangles.OrderByDescending(DistanceToCenter)
+				.Select(DistanceToCenter).First();
+
+			actualMaxRadius.Should().BeLessThan(excpectedRadius);
+
 		}
 
-		[Test]
-		[Timeout(10000)]
-		public void AddALotOfRectangles()
+		private double DistanceToCenter(Rectangle rectangle)
 		{
-			for (var i = 1; i < 200; i++)
-				Layouter.PutNextRectangle(new Size(i + 1, i));
+			return Math.Sqrt((rectangle.X - Layouter.Center.X) ^ 2 + (rectangle.Y - Layouter.Center.Y) ^ 2);
 		}
-
 		[Test]
 		public void AddTwoRectangles()
 		{
