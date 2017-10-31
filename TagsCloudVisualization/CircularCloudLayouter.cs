@@ -41,7 +41,7 @@ namespace TagsCloudVisualization
 
 		private Rectangle PlaceRectangle(Rectangle recToAdd)
 		{
-			radius -= radius/5;
+			radius = 0;
 			while (true)
 			{
 				for (var degree = 0; degree < 360; degree += 3)
@@ -50,7 +50,8 @@ namespace TagsCloudVisualization
 					var shiftX = (int)(recToAdd.Location.X + radius * Math.Cos(rad));
 					var shiftY = (int)(recToAdd.Location.Y + radius * Math.Sin(rad));
 
-					var possibleRectangle = new Rectangle(new Point(shiftX, shiftY),
+					var possibleRectangle = new Rectangle(
+						new Point(shiftX - recToAdd.Size.Width / 2, shiftY - recToAdd.Size.Height / 2 ), 
 						recToAdd.Size);
 
 					if (Rectangles.Count(rectangle => rectangle.IntersectsWith(possibleRectangle)) == 0)

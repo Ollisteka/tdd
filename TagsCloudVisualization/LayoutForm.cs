@@ -18,7 +18,7 @@ namespace TagsCloudVisualization
 			InitializeComponent();
 			Width = 800;
 			Height = 800;
-			Layouter = new CircularCloudLayouter(new Point(250, 250));
+			Layouter = new CircularCloudLayouter(new Point(300, 300));
 			var rnd = new Random();
 			for (int i = 0; i < 30; i++)
 			{
@@ -29,7 +29,8 @@ namespace TagsCloudVisualization
 
 		}
 		protected override void OnPaint(PaintEventArgs e)
-		{
+		{ 
+			var image = new Bitmap(800,800);
 			base.OnPaint(e);
 			Random randomGen = new Random();
 			for (var i = 0; i < Layouter.Rectangles.Count; i++)
