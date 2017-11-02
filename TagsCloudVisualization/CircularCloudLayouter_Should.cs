@@ -22,16 +22,21 @@ namespace TagsCloudVisualization
 			if (TestContext.CurrentContext.Result.FailCount != 0)
 			{
 				var desctopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-				var path = Path.Combine(desctopPath, TestContext.CurrentContext.Test.Name + ".bmp");
-				var totalWidth = Layouter.Rectangles.Sum(rectangle => rectangle.Width);
-				var totalHeight = Layouter.Rectangles.Sum(rectangle => rectangle.Height);
-				var bitmap = new Bitmap(totalWidth, totalHeight);
+				var path = Path.Combine(desctopPath, currentTestName + ".bmp");
+
+				var actualMaxRadius = Layouter.Rectangles.OrderByDescending(DistanceToCenter)
+					.Select(DistanceToCenter).First();
+
+				var bitmap = new Bitmap((int) actualMaxRadius * 2, (int) actualMaxRadius * 2);
 				var g = Graphics.FromImage(bitmap);
-				DrawImage(g, totalWidth/2, totalHeight/2);
+
+				DrawImage(g, (int) actualMaxRadius, (int) actualMaxRadius);
 				bitmap.Save(path);
 				Console.WriteLine($@"Tag cloud visualization saved to file {path}");
 			}
 		}
+
+		private string currentTestName => TestContext.CurrentContext.Test.Name;
 
 		public CircularCloudLayouter Layouter;
 
@@ -43,16 +48,17 @@ namespace TagsCloudVisualization
 				var names = (KnownColor[]) Enum.GetValues(typeof(KnownColor));
 				var randomColorName = names[randomGen.Next(names.Length)];
 				var randomColor = Color.FromKnownColor(randomColorName);
-				g.FillRectangle(new SolidBrush(randomColor), 
+				g.FillRectangle(new SolidBrush(randomColor),
 					rectangle.X + offsetX, rectangle.Y + offsetY,
 					rectangle.Width, rectangle.Height);
 			}
 			g.FillEllipse(new SolidBrush(Color.Red), Layouter.Center.X + offsetX, Layouter.Center.Y + offsetY, 10, 10);
 		}
 
-		[TestCase(3, ExpectedResult = 3)]
-		[TestCase(4, ExpectedResult = 4)]
-		[TestCase(9, ExpectedResult = 9)]
+		[TestCase(13, ExpectedResult = 13)]
+		[TestCase(24, ExpectedResult = 24)]
+		[TestCase(39, ExpectedResult = 39)]
+		[TestCase(52, ExpectedResult = 52)]
 		public int LayouterRectanglesCount_ShouldBeEqual_ToNumberOfAdded(int total)
 		{
 			PutRandomRectangles(total);
@@ -82,8 +88,8 @@ namespace TagsCloudVisualization
 
 		private double DistanceToCenter(Rectangle rectangle)
 		{
-			return Math.Sqrt(Math.Pow(rectangle.X - Layouter.Center.X, 2) 
-							+ Math.Pow(rectangle.Y - Layouter.Center.Y, 2));
+			return Math.Sqrt(Math.Pow(rectangle.X - Layouter.Center.X, 2)
+			                 + Math.Pow(rectangle.Y - Layouter.Center.Y, 2));
 		}
 
 		[Test]
@@ -101,7 +107,7 @@ namespace TagsCloudVisualization
 		public void AllRectangles_FitBigCircle()
 		{
 			PutRandomRectangles(10);
-			var totalArea = Layouter.Rectangles.Sum(rectangle => rectangle.Width*rectangle.Height);
+			var totalArea = Layouter.Rectangles.Sum(rectangle => rectangle.Width * rectangle.Height);
 			var excpectedRadius = Math.Sqrt(totalArea / Math.PI);
 
 			var actualMaxRadius = Layouter.Rectangles.OrderByDescending(DistanceToCenter)
@@ -109,7 +115,7 @@ namespace TagsCloudVisualization
 
 			Console.WriteLine(excpectedRadius + " " + actualMaxRadius);
 
-			actualMaxRadius.Should().BeLessThan(2*excpectedRadius);
+			actualMaxRadius.Should().BeLessThan(2 * excpectedRadius);
 		}
 
 		[Test]
