@@ -1,5 +1,5 @@
 ﻿# Облако тегов (пока без слов)
-***
+
 Примеры раскладки:
 
 ![24 words](https://raw.githubusercontent.com/Ollisteka/tdd/master/TagsCloudVisualization/Images/24.bmp)
