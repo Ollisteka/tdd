@@ -10,12 +10,13 @@ namespace TagsCloudVisualization
 		public CircularCloudLayouter(Point center)
 		{
 			Center = center;
-			Rectangles = new List<Rectangle>();
+			rectangles = new List<Rectangle>();
 		}
 
-		private int radius;
-		public Point Center { get; }
-		public List<Rectangle> Rectangles { get; }
+		public readonly Point Center;
+
+		private readonly List<Rectangle> rectangles;
+		public IReadOnlyCollection<Rectangle> Rectangles => rectangles;
 
 		public Rectangle PutNextRectangle(Size rectangleSize)
 		{
@@ -25,9 +26,9 @@ namespace TagsCloudVisualization
 				throw new ArgumentException("Height and width should be non negative!");
 
 			var recToAdd = PlaceRectangle(new Rectangle(Center, rectangleSize));
-			if (Rectangles.Count == 0)
+			if (rectangles.Count == 0)
 				recToAdd = ShiftFirstRectangle(recToAdd);
-			Rectangles.Add(recToAdd);
+			rectangles.Add(recToAdd);
 			return recToAdd;
 		}
 
@@ -41,8 +42,7 @@ namespace TagsCloudVisualization
 
 		private Rectangle PlaceRectangle(Rectangle recToAdd)
 		{
-			radius = 0;
-			while (true)
+			for (var radius = 0; ; radius += 1)
 			{
 				for (var degree = 0; degree < 360; degree += 3)
 				{
@@ -54,11 +54,9 @@ namespace TagsCloudVisualization
 						new Point(shiftX - recToAdd.Size.Width / 2, shiftY - recToAdd.Size.Height / 2 ), 
 						recToAdd.Size);
 
-					if (Rectangles.Count(rectangle => rectangle.IntersectsWith(possibleRectangle)) == 0)
+					if (rectangles.Count(rectangle => rectangle.IntersectsWith(possibleRectangle)) == 0)
 						 return possibleRectangle;
-
 				}
-				radius += 1;
 			}
 		}
 	}
