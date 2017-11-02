@@ -1,6 +1,6 @@
-# Облако тегов (пока без слов)
+п»ї# РћР±Р»Р°РєРѕ С‚РµРіРѕРІ (РїРѕРєР° Р±РµР· СЃР»РѕРІ)
 ***
-Примеры раскладки:
+РџСЂРёРјРµСЂС‹ СЂР°СЃРєР»Р°РґРєРё:
 
 ![24 words](https://raw.githubusercontent.com/Ollisteka/tdd/master/TagsCloudVisualization/Images/24.bmp)
 ![39 words](https://raw.githubusercontent.com/Ollisteka/tdd/master/TagsCloudVisualization/Images/39.bmp)
