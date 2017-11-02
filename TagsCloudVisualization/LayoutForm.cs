@@ -6,35 +6,55 @@ namespace TagsCloudVisualization
 {
 	public partial class LayoutForm : Form
 	{
-		public CircularCloudLayouter Layouter;
+		private readonly CircularCloudLayouter layouter;
+		private readonly Bitmap bitmap;
+		private int offsetX, offsetY;
 
 		public LayoutForm()
 		{
 			InitializeComponent();
 			Width = 800;
 			Height = 800;
-			Layouter = new CircularCloudLayouter(new Point(300, 300));
+			offsetX = Width / 2;
+			offsetY = Height / 2;
+			layouter = new CircularCloudLayouter(new Point(0, 0));
+
 			var rnd = new Random();
 			for (var i = 0; i < 30; i++)
 			{
 				var height = rnd.Next(15, 60);
 				var width = rnd.Next(height, 150);
-				Layouter.PutNextRectangle(new Size(width, height));
+				layouter.PutNextRectangle(new Size(width, height));
 			}
+
+			bitmap = new Bitmap(Width, Height);
+			var g = Graphics.FromImage(bitmap);
+		    DrawImage(g);
+		}
+
+		public void DrawImage(Graphics g)
+		{
+			var randomGen = new Random();
+			foreach (var rectangle in layouter.Rectangles)
+			{
+				var names = (KnownColor[])Enum.GetValues(typeof(KnownColor));
+				var randomColorName = names[randomGen.Next(names.Length)];
+				var randomColor = Color.FromKnownColor(randomColorName);
+				g.FillRectangle(new SolidBrush(randomColor),
+					rectangle.X + offsetX, rectangle.Y + offsetY,
+					rectangle.Width, rectangle.Height);
+			}
+			g.FillEllipse(new SolidBrush(Color.Red), 
+				layouter.Center.X + offsetX, 
+				layouter.Center.Y + offsetY, 10, 10);
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			base.OnPaint(e);
-			var randomGen = new Random();
-			foreach (var rectangle in Layouter.Rectangles)
-			{
-				var names = (KnownColor[]) Enum.GetValues(typeof(KnownColor));
-				var randomColorName = names[randomGen.Next(names.Length)];
-				var randomColor = Color.FromKnownColor(randomColorName);
-				e.Graphics.FillRectangle(new SolidBrush(randomColor), rectangle);
-			}
-			e.Graphics.FillEllipse(new SolidBrush(Color.Red), Layouter.Center.X, Layouter.Center.Y, 10, 10);
+			e.Graphics.DrawImage(bitmap, 0, 0,
+				bitmap.Width,
+				bitmap.Height);
 		}
 	}
 }
