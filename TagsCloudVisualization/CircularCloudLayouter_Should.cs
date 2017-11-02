@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
@@ -15,16 +16,58 @@ namespace TagsCloudVisualization
 			Layouter = new CircularCloudLayouter(new Point(0, 0));
 		}
 
+		[TearDown]
+		public void TearDown()
+		{
+			if (TestContext.CurrentContext.Result.FailCount != 0)
+			{
+				var desctopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+				var path = Path.Combine(desctopPath, TestContext.CurrentContext.Test.Name + ".bmp");
+				var totalWidth = Layouter.Rectangles.Sum(rectangle => rectangle.Width);
+				var totalHeight = Layouter.Rectangles.Sum(rectangle => rectangle.Height);
+				var bitmap = new Bitmap(totalWidth, totalHeight);
+				var g = Graphics.FromImage(bitmap);
+				DrawImage(g, totalWidth/2, totalHeight/2);
+				bitmap.Save(path);
+				Console.WriteLine($@"Tag cloud visualization saved to file {path}");
+			}
+		}
+
 		public CircularCloudLayouter Layouter;
 
-		[TestCase(5, 2, 10, 1, 4, 2, ExpectedResult = 3)]
-		[TestCase(5, 2, 6, 3, 10, 1, 4, 2, ExpectedResult = 4)]
-		[TestCase(5, 2, 6, 3, 10, 1, 4, 2, 4, 1, 7, 4, 6, 1, 9, 5, 13, 10, ExpectedResult = 9)]
-		public int AddManyRectangles(params int[] dimensions)
+		public void DrawImage(Graphics g, int offsetX, int offsetY)
 		{
-			for (var i = 0; i < dimensions.Length; i += 2)
-				Layouter.PutNextRectangle(new Size(dimensions[i], dimensions[i + 1]));
+			var randomGen = new Random();
+			foreach (var rectangle in Layouter.Rectangles)
+			{
+				var names = (KnownColor[]) Enum.GetValues(typeof(KnownColor));
+				var randomColorName = names[randomGen.Next(names.Length)];
+				var randomColor = Color.FromKnownColor(randomColorName);
+				g.FillRectangle(new SolidBrush(randomColor), 
+					rectangle.X + offsetX, rectangle.Y + offsetY,
+					rectangle.Width, rectangle.Height);
+			}
+			g.FillEllipse(new SolidBrush(Color.Red), Layouter.Center.X + offsetX, Layouter.Center.Y + offsetY, 10, 10);
+		}
+
+		[TestCase(3, ExpectedResult = 3)]
+		[TestCase(4, ExpectedResult = 4)]
+		[TestCase(9, ExpectedResult = 9)]
+		public int LayouterRectanglesCount_ShouldBeEqual_ToNumberOfAdded(int total)
+		{
+			PutRandomRectangles(total);
 			return Layouter.Rectangles.Count;
+		}
+
+		private void PutRandomRectangles(int total)
+		{
+			var rnd = new Random();
+			for (var i = 0; i < total; i++)
+			{
+				var height = rnd.Next(15, 60);
+				var width = rnd.Next(height, 150);
+				Layouter.PutNextRectangle(new Size(width, height));
+			}
 		}
 
 		[TestCase(1, -2, TestName = "NegativeWidth")]
@@ -37,34 +80,14 @@ namespace TagsCloudVisualization
 			Assert.Throws<ArgumentException>(() => Layouter.PutNextRectangle(new Size(width, height)));
 		}
 
-		[Test]
-		public void AllRectangles_FitBigCircle()
-		{
-			var rnd = new Random();
-			for (int i = 0; i < 10; i++)
-			{
-				var height = rnd.Next(15, 60);
-				var width = rnd.Next(height, 150);
-				Layouter.PutNextRectangle(new Size(width, height));
-			}
-
-			var totalWidth = Layouter.Rectangles.Sum(rectangle => rectangle.Width);
-			var totalHeight = Layouter.Rectangles.Sum(rectangle => rectangle.Height);
-			var excpectedRadius = Math.Sqrt((totalHeight * totalWidth) / Math.PI);
-
-			var actualMaxRadius = Layouter.Rectangles.OrderByDescending(DistanceToCenter)
-				.Select(DistanceToCenter).First();
-
-			actualMaxRadius.Should().BeLessThan(excpectedRadius);
-
-		}
-
 		private double DistanceToCenter(Rectangle rectangle)
 		{
-			return Math.Sqrt((rectangle.X - Layouter.Center.X) ^ 2 + (rectangle.Y - Layouter.Center.Y) ^ 2);
+			return Math.Sqrt(Math.Pow(rectangle.X - Layouter.Center.X, 2) 
+							+ Math.Pow(rectangle.Y - Layouter.Center.Y, 2));
 		}
+
 		[Test]
-		public void AddTwoRectangles()
+		public void AddTwoRectangles_ShouldNotIntersect()
 		{
 			var sizeOne = new Size(4, 2);
 			var sizeTwo = new Size(5, 1);
@@ -75,17 +98,25 @@ namespace TagsCloudVisualization
 		}
 
 		[Test]
-		public void ShouldHaveCenter_AtPointZero_WhenConstructed()
+		public void AllRectangles_FitBigCircle()
 		{
-			Layouter.Center.Should().Be(new Point(0, 0));
+			PutRandomRectangles(10);
+			var totalArea = Layouter.Rectangles.Sum(rectangle => rectangle.Width*rectangle.Height);
+			var excpectedRadius = Math.Sqrt(totalArea / Math.PI);
+
+			var actualMaxRadius = Layouter.Rectangles.OrderByDescending(DistanceToCenter)
+				.Select(DistanceToCenter).First();
+
+			Console.WriteLine(excpectedRadius + " " + actualMaxRadius);
+
+			actualMaxRadius.Should().BeLessThan(2*excpectedRadius);
 		}
 
 		[Test]
-		public void ShouldHaveOneRectangle_AfterPutNext()
+		public void FailingTest_ToTestSaving()
 		{
-			var size = new Size(20, 10);
-			Layouter.PutNextRectangle(size);
-			Layouter.Rectangles.Count.Should().Be(1);
+			PutRandomRectangles(20);
+			"Hello".Should().BeNullOrEmpty();
 		}
 
 		[Test]
@@ -98,9 +129,23 @@ namespace TagsCloudVisualization
 		}
 
 		[Test]
+		public void ShouldHaveCenter_AtPointZero_WhenConstructed()
+		{
+			Layouter.Center.Should().Be(new Point(0, 0));
+		}
+
+		[Test]
 		public void ShouldHaveEmtyRectanglesList_WhenConstructed()
 		{
 			Layouter.Rectangles.Count.Should().Be(0);
+		}
+
+		[Test]
+		public void ShouldHaveOneRectangle_AfterPutNext()
+		{
+			var size = new Size(20, 10);
+			Layouter.PutNextRectangle(size);
+			Layouter.Rectangles.Count.Should().Be(1);
 		}
 	}
 }
