@@ -7,15 +7,16 @@ namespace TagsCloudVisualization
 {
 	public class CircularCloudLayouter
 	{
+		public readonly Point Center;
+
+		private readonly List<Rectangle> rectangles;
+
 		public CircularCloudLayouter(Point center)
 		{
 			Center = center;
 			rectangles = new List<Rectangle>();
 		}
 
-		public readonly Point Center;
-
-		private readonly List<Rectangle> rectangles;
 		public IReadOnlyCollection<Rectangle> Rectangles => rectangles;
 
 		public Rectangle PutNextRectangle(Size rectangleSize)
@@ -26,13 +27,45 @@ namespace TagsCloudVisualization
 				throw new ArgumentException("Height and width should be non negative!");
 
 			var recToAdd = PlaceRectangle(new Rectangle(Center, rectangleSize));
-			if (rectangles.Count == 0)
-				recToAdd = ShiftFirstRectangle(recToAdd);
+			recToAdd = rectangles.Count == 0
+				? CentralizeFirstRectangle(recToAdd)
+				: TryToShiftRectangle(recToAdd);
 			rectangles.Add(recToAdd);
 			return recToAdd;
 		}
 
-		private Rectangle ShiftFirstRectangle(Rectangle rectangle)
+		private Rectangle TryToShiftRectangle(Rectangle rectangle)
+		{
+			var centerX = Center.X;
+			var centerY = Center.Y;
+
+			for (var dx = 0; dx < 40; dx++)
+			for (var dy = 0; dy < 40; dy++)
+			{
+				var x = rectangle.X;
+				var y = rectangle.Y;
+
+				if (x > centerX)
+					x -= dx;
+				else if (x < centerX)
+					x += dx;
+
+				if (y > centerY)
+					y -= dy;
+				else if (y < centerY)
+					y += dy;
+
+				var possibleRectangle = new Rectangle(
+					new Point(x, y),
+					rectangle.Size);
+
+				if (rectangles.Count(rec => rec.IntersectsWith(possibleRectangle)) == 0)
+					rectangle = possibleRectangle;
+			}
+			return rectangle;
+		}
+
+		private Rectangle CentralizeFirstRectangle(Rectangle rectangle)
 		{
 			var height = rectangle.Height;
 			var width = rectangle.Width;
@@ -42,21 +75,19 @@ namespace TagsCloudVisualization
 
 		private Rectangle PlaceRectangle(Rectangle recToAdd)
 		{
-			for (var radius = 0; ; radius += 1)
+			for (var radius = 0;; radius += 1)
+			for (var degree = 0; degree < 360; degree += 3)
 			{
-				for (var degree = 0; degree < 360; degree += 3)
-				{
-					var rad = (degree / Math.PI) * 180.0;
-					var shiftX = (int)(recToAdd.Location.X + radius * Math.Cos(rad));
-					var shiftY = (int)(recToAdd.Location.Y + radius * Math.Sin(rad));
+				var rad = degree / Math.PI * 180.0;
+				var shiftX = (int) (recToAdd.Location.X + radius * Math.Cos(rad));
+				var shiftY = (int) (recToAdd.Location.Y + radius * Math.Sin(rad));
 
-					var possibleRectangle = new Rectangle(
-						new Point(shiftX - recToAdd.Size.Width / 2, shiftY - recToAdd.Size.Height / 2 ), 
-						recToAdd.Size);
+				var possibleRectangle = new Rectangle(
+					new Point(shiftX - recToAdd.Size.Width / 2, shiftY - recToAdd.Size.Height / 2),
+					recToAdd.Size);
 
-					if (rectangles.Count(rectangle => rectangle.IntersectsWith(possibleRectangle)) == 0)
-						 return possibleRectangle;
-				}
+				if (rectangles.Count(rectangle => rectangle.IntersectsWith(possibleRectangle)) == 0)
+					return possibleRectangle;
 			}
 		}
 	}
