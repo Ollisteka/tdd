@@ -19,21 +19,25 @@ namespace TagsCloudVisualization
 		[TearDown]
 		public void TearDown()
 		{
-			if (TestContext.CurrentContext.Result.FailCount != 0)
-			{
-				var desctopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-				var path = Path.Combine(desctopPath, currentTestName + ".bmp");
+			if (TestContext.CurrentContext.Result.FailCount == 0) return;
 
-				var actualMaxRadius = Layouter.Rectangles.OrderByDescending(DistanceToCenter)
-					.Select(DistanceToCenter).First();
+			var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+			var path = Path.Combine(desktopPath, currentTestName + ".bmp");
 
-				var bitmap = new Bitmap((int) actualMaxRadius * 2, (int) actualMaxRadius * 2);
-				var g = Graphics.FromImage(bitmap);
+			var actualMaxRadius = 1.0;
 
+			if (Layouter.Rectangles.Count != 0)
+				actualMaxRadius = Layouter.Rectangles
+											.Select(DistanceToCenter)
+											.Max();
+
+			var bitmap = new Bitmap((int) actualMaxRadius * 2, (int) actualMaxRadius * 2);
+
+			using (var g = Graphics.FromImage(bitmap))
 				DrawImage(g, (int) actualMaxRadius, (int) actualMaxRadius);
-				bitmap.Save(path);
-				Console.WriteLine($@"Tag cloud visualization saved to file {path}");
-			}
+
+			bitmap.Save(path);
+			Console.WriteLine($@"Tag cloud visualization saved to file {path}");
 		}
 
 		private string currentTestName => TestContext.CurrentContext.Test.Name;
@@ -110,19 +114,11 @@ namespace TagsCloudVisualization
 			var totalArea = Layouter.Rectangles.Sum(rectangle => rectangle.Width * rectangle.Height);
 			var excpectedRadius = Math.Sqrt(totalArea / Math.PI);
 
-			var actualMaxRadius = Layouter.Rectangles.OrderByDescending(DistanceToCenter)
-				.Select(DistanceToCenter).First();
+			var actualMaxRadius = Layouter.Rectangles.Select(DistanceToCenter).Max();
 
-			Console.WriteLine(excpectedRadius + " " + actualMaxRadius);
+			Console.WriteLine($@"{excpectedRadius} {actualMaxRadius}");
 
 			actualMaxRadius.Should().BeLessThan(2 * excpectedRadius);
-		}
-
-		[Test]
-		public void FailingTest_ToTestSaving()
-		{
-			PutRandomRectangles(20);
-			"Hello".Should().BeNullOrEmpty();
 		}
 
 		[Test]
