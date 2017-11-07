@@ -7,6 +7,7 @@ namespace TagsCloudVisualization
 {
 	public class CircularCloudLayouter
 	{
+		private const int ShiftLength = 40;
 		public readonly Point Center;
 
 		private readonly List<Rectangle> rectangles;
@@ -39,21 +40,14 @@ namespace TagsCloudVisualization
 			var centerX = Center.X;
 			var centerY = Center.Y;
 
-			for (var dx = 0; dx < 40; dx++)
-			for (var dy = 0; dy < 40; dy++)
+			for (var dx = 0; dx < ShiftLength; dx++)
+			for (var dy = 0; dy < ShiftLength; dy++)
 			{
 				var x = rectangle.X;
 				var y = rectangle.Y;
 
-				if (x > centerX)
-					x -= dx;
-				else if (x < centerX)
-					x += dx;
-
-				if (y > centerY)
-					y -= dy;
-				else if (y < centerY)
-					y += dy;
+				x += dx * centerX.CompareTo(x);
+				y += dy * centerY.CompareTo(y);
 
 				var possibleRectangle = new Rectangle(
 					new Point(x, y),
