@@ -72,7 +72,7 @@ namespace TagsCloudVisualization
 		private double DistanceToCenter(Rectangle rectangle)
 		{
 			return Math.Sqrt(Math.Pow(rectangle.X - Layouter.Center.X, 2)
-			                 + Math.Pow(rectangle.Y - Layouter.Center.Y, 2));
+							+ Math.Pow(rectangle.Y - Layouter.Center.Y, 2));
 		}
 
 		[Test]

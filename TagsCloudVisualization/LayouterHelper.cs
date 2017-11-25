@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace TagsCloudVisualization
@@ -32,11 +33,20 @@ namespace TagsCloudVisualization
 				var names = (KnownColor[]) Enum.GetValues(typeof(KnownColor));
 				var randomColorName = names[randomGen.Next(names.Length)];
 				var randomColor = Color.FromKnownColor(randomColorName);
-				g.FillRectangle(new SolidBrush(randomColor),
+				g.DrawRectangle(new Pen(randomColor),
 					rectangle.X + offsetX, rectangle.Y + offsetY,
 					rectangle.Width, rectangle.Height);
 			}
 			g.FillEllipse(new SolidBrush(Color.Red), layouter.Center.X + offsetX, layouter.Center.Y + offsetY, 10, 10);
+		}
+
+		public static void DrawWords(Dictionary<string, Rectangle> wordsRectangles, Graphics g, int offsetX, int offsetY)
+		{
+			foreach (var word in wordsRectangles)
+			{
+				var shiftedRectangle = new Rectangle(word.Value.X + offsetX, word.Value.Y + offsetY, word.Value.Width, word.Value.Height);
+				g.DrawString(word.Key, new Font(FontFamily.GenericSansSerif, word.Value.Width / word.Key.Length), new SolidBrush(Color.Black), shiftedRectangle);
+			}
 		}
 	}
 }
