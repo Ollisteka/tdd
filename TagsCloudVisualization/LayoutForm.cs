@@ -29,13 +29,13 @@ namespace TagsCloudVisualization
 
 		public LayoutForm(IEnumerable<string> words)
 		{
-			Width = 800;
-			Height = 800;
+
+			ResizeWords(words);
+			Width = wordsRectangles.Values.Sum(rectangle => rectangle.Width) / 7;
+			Height = wordsRectangles.Values.Sum(rectangle => rectangle.Height) / 2;
 			bitmap = new Bitmap(Width, Height);
 			var g = Graphics.FromImage(bitmap);
-			ResizeWords(words, g);
-			//Width = wordsRectangles.Values.Sum(rectangle => rectangle.Width) + 200;
-			//Height = wordsRectangles.Values.Sum(rectangle => rectangle.Height) + 200;
+			
 			var offsetX = Width / 2;
 			var offsetY = Height / 2;
 			
@@ -44,19 +44,17 @@ namespace TagsCloudVisualization
 
 			var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 			var path = Path.Combine(desktopPath, DateTime.Now.Ticks + ".bmp");
-			//bitmap.Save(path);
+			bitmap.Save(path);
 		}
 
-		private void ResizeWords(IEnumerable<string> words, Graphics g)
+		private void ResizeWords(IEnumerable<string> words)
 		{
 			float fontSize = 30;
 			foreach (var word in words)
 			{
-				var stringFont = new Font(FontFamily.GenericSansSerif, fontSize);
-				var stringSize = g.MeasureString(word, stringFont);
-
-				layouter.PutNextRectangle(stringSize.ToSize());
-				wordsRectangles[word] = layouter.Rectangles.Last();
+				var font = new Font(FontFamily.GenericSansSerif, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+				var tagSize = TextRenderer.MeasureText(word, font);
+				wordsRectangles[word] = layouter.PutNextRectangle(tagSize);
 				fontSize -= 0.2f;
 			}
 		}
