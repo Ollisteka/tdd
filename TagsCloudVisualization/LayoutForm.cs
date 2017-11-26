@@ -11,6 +11,7 @@ namespace TagsCloudVisualization
 	{
 		private readonly Bitmap bitmap;
 		private Dictionary<string, Rectangle> wordsRectangles = new Dictionary<string, Rectangle>();
+		private Dictionary<string, float> wordsFonts = new Dictionary<string, float>();
 		private CircularCloudLayouter layouter = new CircularCloudLayouter(new Point(0,0));
 		public LayoutForm()
 		{
@@ -27,9 +28,8 @@ namespace TagsCloudVisualization
 			LayouterHelper.DrawImage(layouter, g, offsetX, offsetY);
 		}
 
-		public LayoutForm(IEnumerable<string> words)
+		public LayoutForm(Dictionary<string, int> words)
 		{
-
 			ResizeWords(words);
 			Width = wordsRectangles.Values.Sum(rectangle => rectangle.Width) / 7;
 			Height = wordsRectangles.Values.Sum(rectangle => rectangle.Height) / 2;
@@ -38,24 +38,40 @@ namespace TagsCloudVisualization
 			
 			var offsetX = Width / 2;
 			var offsetY = Height / 2;
-			
-			//LayouterHelper.DrawImage(layouter, g, offsetX, offsetY);
-			LayouterHelper.DrawWords(wordsRectangles, g, offsetX, offsetY);
+
+			DrawWords(g, offsetX, offsetY);
 
 			var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 			var path = Path.Combine(desktopPath, DateTime.Now.Ticks + ".bmp");
 			bitmap.Save(path);
 		}
 
-		private void ResizeWords(IEnumerable<string> words)
+		private void ResizeWords(Dictionary<string, int> words)
 		{
-			float fontSize = 30;
+			var minFontSize = 25;
+			var maxFontSize = 55;
+			var maxFrequency = words.Values.Max();
+			var minFrequency = words.Values.Min();
 			foreach (var word in words)
 			{
-				var font = new Font(FontFamily.GenericSansSerif, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
-				var tagSize = TextRenderer.MeasureText(word, font);
-				wordsRectangles[word] = layouter.PutNextRectangle(tagSize);
-				fontSize -= 0.2f;
+				var weight = (Math.Log((float) word.Value / minFrequency)) / Math.Log((float) maxFrequency / minFrequency);
+				var fontSize = minFontSize + (float) Math.Round((maxFontSize - minFontSize) * weight);
+				//var fontSize = ((float)word.Value / maxFrequency) * (maxFontSize - minFontSize) + minFontSize;
+				var font = new Font(FontFamily.GenericSansSerif, fontSize);
+				var tagSize = TextRenderer.MeasureText(word.Key, font);
+				wordsRectangles[word.Key] = layouter.PutNextRectangle(tagSize);
+				wordsFonts[word.Key] = fontSize;
+			}
+		}
+
+		public void DrawWords(Graphics g, int offsetX, int offsetY)
+		{
+			foreach (var word in wordsRectangles)
+			{
+				var shiftedRectangle = new Rectangle(word.Value.X + offsetX, word.Value.Y + offsetY, 
+													word.Value.Width, word.Value.Height);
+				g.DrawString(word.Key, new Font(FontFamily.GenericSansSerif, wordsFonts[word.Key]-3), 
+							new SolidBrush(Color.Black), shiftedRectangle);
 			}
 		}
 

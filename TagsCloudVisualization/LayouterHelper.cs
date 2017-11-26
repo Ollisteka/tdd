@@ -39,14 +39,5 @@ namespace TagsCloudVisualization
 			}
 			g.FillEllipse(new SolidBrush(Color.Red), layouter.Center.X + offsetX, layouter.Center.Y + offsetY, 10, 10);
 		}
-
-		public static void DrawWords(Dictionary<string, Rectangle> wordsRectangles, Graphics g, int offsetX, int offsetY)
-		{
-			foreach (var word in wordsRectangles)
-			{
-				var shiftedRectangle = new Rectangle(word.Value.X + offsetX, word.Value.Y + offsetY, word.Value.Width, word.Value.Height);
-				g.DrawString(word.Key, new Font(FontFamily.GenericSansSerif, word.Value.Width / word.Key.Length), new SolidBrush(Color.Black), shiftedRectangle);
-			}
-		}
 	}
 }
