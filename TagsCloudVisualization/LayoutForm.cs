@@ -48,8 +48,8 @@ namespace TagsCloudVisualization
 
 		private void ResizeWords(Dictionary<string, int> words)
 		{
-			var minFontSize = 25;
-			var maxFontSize = 55;
+			var minFontSize = 15;
+			var maxFontSize = 35;
 			var maxFrequency = words.Values.Max();
 			var minFrequency = words.Values.Min();
 			foreach (var word in words)
@@ -66,6 +66,9 @@ namespace TagsCloudVisualization
 
 		public void DrawWords(Graphics g, int offsetX, int offsetY)
 		{
+			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+			g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			foreach (var word in wordsRectangles)
 			{
 				var shiftedRectangle = new Rectangle(word.Value.X + offsetX, word.Value.Y + offsetY, 

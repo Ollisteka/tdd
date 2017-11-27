@@ -5,10 +5,31 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Autofac;
 using NHunspell;
 
 namespace TagsCloudVisualization
 {
+	public class AutofacConfig
+	{
+		public static void ConfigureContainer()
+		{
+			// получаем экземпляр контейнера
+			var builder = new ContainerBuilder();
+
+			// регистрируем контроллер в текущей сборке
+			//builder.(typeof(Program).Assembly);
+
+			// регистрируем споставление типов
+			//builder.RegisterType<BookRepository>().As<IRepository>();
+
+			// создаем новый контейнер с теми зависимостями, которые определены выше
+			var container = builder.Build();
+
+			// установка сопоставителя зависимостей
+			//DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+		}
+	}
 	internal static class Program
 	{
 		public static LayoutForm CreateForm()
