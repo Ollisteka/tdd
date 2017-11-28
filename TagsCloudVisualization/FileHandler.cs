@@ -29,7 +29,6 @@ namespace TagsCloudVisualization
 					.Select(x =>
 					{
 						var word = x.ToLower();
-						//var morphs = hunspell.Analyze(word);
 						var stems = hunspell.Stem(word);
 						return stems.Any() ? stems[0] : word;
 					})
