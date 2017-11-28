@@ -10,7 +10,7 @@ namespace TagsCloudVisualization
 {
 	internal static class Program
 	{
-		private const string Usage = @"Tags Cloud Visualization.
+		private const string Usage = @"Tags Cloud Visualization. Supports only Rissin for now.
 
 	Usage:
 	  TagsCloudVisualization.exe <inputfile>
@@ -19,7 +19,7 @@ namespace TagsCloudVisualization
 
 	Options:
 	  -o FILE            Specify output file. 
-	  -t NUM --top=NUM   Specify how many words to show [default: 70]
+	  -t NUM --top=NUM   Specify how many words to show [default: 50]
 	  -h --help          Show this screen.
 
 	";
@@ -31,19 +31,23 @@ namespace TagsCloudVisualization
 		private static void Main(string[] args)
 		{
 			var arguments = new Docopt().Apply(Usage, args, optionsFirst: true, exit: true);
-			var a = arguments["-o"] == null;
-			foreach (var argument in arguments)
-				Console.WriteLine("{0} = {1}", argument.Key, argument.Value);
+			
+//			foreach (var argument in arguments)
+//				Console.WriteLine("{0} = {1}", argument.Key, argument.Value);
 
 			var inputFile = arguments["<inputfile>"].ToString();
+			var outputFile = arguments["-o"]?.ToString();
 			var topWords = arguments["--top"].AsInt;
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(CreateForm(inputFile, topWords));
-			//Application.Run(new LayoutForm(ProccessWords(inputFile)));
+			var layoutForm = CreateForm(inputFile, outputFile, topWords);
+			Application.Run(layoutForm);
+			if (outputFile != null)
+				layoutForm.Bitmap.Save(outputFile);
+			
 		}
 
-		public static LayoutForm CreateForm(string filename, int top)
+		public static LayoutForm CreateForm(string inputFile, string  outputFile, int top)
 		{
 			var container = new ContainerBuilder();
 			container.RegisterType<LayoutForm>().AsSelf();
@@ -51,7 +55,7 @@ namespace TagsCloudVisualization
 				.As<ITextHandler>()
 				.WithParameters(new List<Parameter>
 				{
-					new NamedParameter("filename", filename),
+					new NamedParameter("filename", inputFile),
 					new NamedParameter("top", top)
 				});
 			container.RegisterType<CloudDrawer>().As<ICloudDrawer>();
