@@ -1,82 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using TagsCloudVisualization.Interfaces;
 
 namespace TagsCloudVisualization
 {
 	public partial class LayoutForm : Form
 	{
 		private readonly Bitmap bitmap;
-		private Dictionary<string, Rectangle> wordsRectangles = new Dictionary<string, Rectangle>();
-		private Dictionary<string, float> wordsFonts = new Dictionary<string, float>();
-		private CircularCloudLayouter layouter = new CircularCloudLayouter(new Point(0,0));
-		public LayoutForm()
+
+		public LayoutForm(ICloudDrawer drawer)
 		{
-			InitializeComponent();
-			Width = 1000;
-			Height = 1000;
-			var offsetX = Width / 2;
-			var offsetY = Height / 2;
-
-			layouter.AddRandomRectangles(40, 40, 70, 200);
-
+			Width = drawer.Width;
+			Height = drawer.Height;
 			bitmap = new Bitmap(Width, Height);
-			var g = Graphics.FromImage(bitmap);
-			LayouterHelper.DrawImage(layouter, g, offsetX, offsetY);
-		}
-
-		public LayoutForm(Dictionary<string, int> words)
-		{
-			ResizeWords(words);
-			Width = wordsRectangles.Values.Sum(rectangle => rectangle.Width) / 7;
-			Height = wordsRectangles.Values.Sum(rectangle => rectangle.Height) / 2;
-			bitmap = new Bitmap(Width, Height);
-			var g = Graphics.FromImage(bitmap);
-			
-			var offsetX = Width / 2;
-			var offsetY = Height / 2;
-
-			DrawWords(g, offsetX, offsetY);
-
-			var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-			var path = Path.Combine(desktopPath, DateTime.Now.Ticks + ".bmp");
-			bitmap.Save(path);
-		}
-
-		private void ResizeWords(Dictionary<string, int> words)
-		{
-			var minFontSize = 15;
-			var maxFontSize = 35;
-			var maxFrequency = words.Values.Max();
-			var minFrequency = words.Values.Min();
-			foreach (var word in words)
+			using (var g = Graphics.FromImage(bitmap))
 			{
-				var weight = (Math.Log((float) word.Value / minFrequency)) / Math.Log((float) maxFrequency / minFrequency);
-				var fontSize = minFontSize + (float) Math.Round((maxFontSize - minFontSize) * weight);
-				//var fontSize = ((float)word.Value / maxFrequency) * (maxFontSize - minFontSize) + minFontSize;
-				var font = new Font(FontFamily.GenericSansSerif, fontSize);
-				var tagSize = TextRenderer.MeasureText(word.Key, font);
-				wordsRectangles[word.Key] = layouter.PutNextRectangle(tagSize);
-				wordsFonts[word.Key] = fontSize;
-			}
-		}
+				drawer.DrawWords(g);
+				var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+				var savePath = Path.Combine(desktopPath, DateTime.Now.Ticks + ".bmp");
+//				if (savePath != null)
+//					bitmap.Save(savePath);
+			}}
 
-		public void DrawWords(Graphics g, int offsetX, int offsetY)
-		{
-			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-			g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			foreach (var word in wordsRectangles)
-			{
-				var shiftedRectangle = new Rectangle(word.Value.X + offsetX, word.Value.Y + offsetY, 
-													word.Value.Width, word.Value.Height);
-				g.DrawString(word.Key, new Font(FontFamily.GenericSansSerif, wordsFonts[word.Key]-3), 
-							new SolidBrush(Color.Black), shiftedRectangle);
-			}
-		}
 
 		protected override void OnPaint(PaintEventArgs e)
 		{

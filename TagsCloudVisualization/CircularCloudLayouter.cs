@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using TagsCloudVisualization.Interfaces;
 
 namespace TagsCloudVisualization
 {
-	public class CircularCloudLayouter
+	public class CircularCloudLayouter : ICloudLayouter
 	{
 		private const int ShiftLength = 40;
-		public readonly Point Center;
 
 		private readonly List<Rectangle> rectangles;
 
@@ -17,6 +17,8 @@ namespace TagsCloudVisualization
 			Center = center;
 			rectangles = new List<Rectangle>();
 		}
+
+		public Point Center { get; }
 
 		public IReadOnlyCollection<Rectangle> Rectangles => rectangles;
 
