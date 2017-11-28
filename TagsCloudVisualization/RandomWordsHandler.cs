@@ -1,30 +1,33 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using NHunspell;
 using TagsCloudVisualization.Interfaces;
 
 namespace TagsCloudVisualization
 {
-	internal class FileHandler : ITextHandler
+	public class RandomWordsHandler : ITextHandler
 	{
 		private readonly string filename;
 		private readonly int top;
+		private readonly Random rnd = new Random();
 
-		public FileHandler(string filename, int top)
+		public RandomWordsHandler(string filename, int top)
 		{
 			this.filename = filename;
 			this.top = top;
 		}
-
 		public Dictionary<string, int> MakeFrequencyStatistics()
 		{
-			var content = File.ReadAllText(filename);
+			var content = File.ReadAllLines(filename);
 
 			using (var hunspell = new Hunspell("dictionaries/ru_RU.aff", "dictionaries/ru_RU.dic"))
 			{
-				return Regex.Split(content, @"[^\p{L}]*\p{Z}[^\p{L}]*")
+				return content
 					.Where(x => x.Length > 3)
 					.Select(x =>
 					{
@@ -37,11 +40,13 @@ namespace TagsCloudVisualization
 					.Select(x => new
 					{
 						KeyField = x.Key,
-						Count = x.Count()
+						Count = rnd.Next(1000)
 					})
 					.OrderByDescending(x => x.Count)
-					.Take(top).ToDictionary(key => key.KeyField, val => val.Count);
+					.Take(top)
+					.ToDictionary(key => key.KeyField, val => val.Count);
 			}
+
 		}
 	}
 }
