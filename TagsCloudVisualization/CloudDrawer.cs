@@ -11,6 +11,8 @@ namespace TagsCloudVisualization
 {
 	public class CloudDrawer : ICloudDrawer
 	{
+		private const int AdditionalHeight = 10;
+		private const int AdditionalWidth = 25;
 		private readonly CircularCloudLayouter layouter = new CircularCloudLayouter(new Point(0, 0));
 		private readonly Dictionary<string, float> wordsFonts = new Dictionary<string, float>();
 
@@ -20,11 +22,15 @@ namespace TagsCloudVisualization
 		{
 			ResizeWords(textHandler.MakeFrequencyStatistics());
 		}
-		public int Width => wordsRectangles.Values.Sum(rectangle => rectangle.Width) / 7;
-		public int Height => wordsRectangles.Values.Sum(rectangle => rectangle.Height) / 2;
 
 		private int OffsetX => Width / 2;
 		private int OffsetY => Height / 2;
+
+		public int Width => wordsRectangles.Values.Max(rectangle => rectangle.Right) -
+							wordsRectangles.Values.Min(rectangle => rectangle.Left) + AdditionalWidth;
+
+		public int Height => wordsRectangles.Values.Max(rectangle => rectangle.Bottom) -
+							wordsRectangles.Values.Min(rectangle => rectangle.Top) + AdditionalHeight;
 
 		public void DrawWords(Graphics g)
 		{
