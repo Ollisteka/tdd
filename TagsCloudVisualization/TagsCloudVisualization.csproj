@@ -72,10 +72,13 @@
     <Compile Include="CircularCloudLayouter.cs" />
     <Compile Include="CircularCloudLayouter_Should.cs" />
     <Compile Include="CloudDrawer.cs" />
-    <Compile Include="FileHandler.cs" />
+    <Compile Include="Interfaces\ITextFiltration.cs" />
+    <Compile Include="Interfaces\ITextReader.cs" />
+    <Compile Include="TextProcessing\FileHandler.cs" />
+    <Compile Include="TextProcessing\FrequencyCounter.cs" />
     <Compile Include="Interfaces\ICloudDrawer.cs" />
     <Compile Include="Interfaces\ICloudLayouter.cs" />
-    <Compile Include="Interfaces\ITextHandler.cs" />
+    <Compile Include="Interfaces\IFrequencyCounter.cs" />
     <Compile Include="LayouterHelper.cs" />
     <Compile Include="LayoutForm.cs">
       <SubType>Form</SubType>
@@ -85,12 +88,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RandomWordsHandler.cs" />
     <Compile Include="T4DocoptNet.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>T4DocoptNet.tt</DependentUpon>
     </Compile>
+    <Compile Include="TextProcessing\HunspellFilter.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -170,5 +173,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

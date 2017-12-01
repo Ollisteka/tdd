@@ -2,7 +2,7 @@
 
 namespace TagsCloudVisualization.Interfaces
 {
-	public interface ITextHandler
+	public interface IFrequencyCounter
 	{
 		Dictionary<string, int> MakeFrequencyStatistics();
 	}
