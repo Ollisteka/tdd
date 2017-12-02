@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -63,14 +62,11 @@ namespace TagsCloudVisualization
 				.AsImplementedInterfaces()
 				.SingleInstance();
 
-			builder.RegisterType<FilterSettings>()
-				.As<IFilterSettings>()
+			builder.RegisterType<Settings>()
+				.As<ISettings>()
 				.SingleInstance();
 
-			builder.Register(с => new CircularCloudLayouter(new Point(0, 0)))
-				.As<ICloudLayouter>()
-				.SingleInstance();
-
+			builder.RegisterType<CircularCloudLayouter>().As<ICloudLayouter>();
 			builder.RegisterType<CloudDrawer>().As<ICloudDrawer>();
 			builder.RegisterType<FrequencyCounter>().As<IFrequencyCounter>();
 

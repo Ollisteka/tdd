@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Drawing;
 using TagsCloudVisualization.Interfaces;
 
-namespace TagsCloudVisualization.TextProcessing
+namespace TagsCloudVisualization
 {
-	public class FilterSettings : IFilterSettings
+	public class Settings : ISettings
 	{
 		private int maxLength;
 		private int minLength;
@@ -29,5 +30,7 @@ namespace TagsCloudVisualization.TextProcessing
 				minLength = value < 2 ? 2 : value;
 			}
 		}
+
+		public Point CenterPoint { get; set; }
 	}
 }

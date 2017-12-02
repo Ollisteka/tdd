@@ -6,9 +6,9 @@ namespace TagsCloudVisualization.TextProcessing
 {
 	internal class LongWordsFilter : ITextFiltration
 	{
-		private readonly IFilterSettings settings;
+		private readonly ISettings settings;
 
-		public LongWordsFilter(IFilterSettings settings)
+		public LongWordsFilter(ISettings settings)
 		{
 			this.settings = settings;
 		}

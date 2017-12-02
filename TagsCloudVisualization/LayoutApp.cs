@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TagsCloudVisualization.Interfaces;
-using TagsCloudVisualization.TextProcessing;
 
 namespace TagsCloudVisualization
 {
@@ -13,10 +13,10 @@ namespace TagsCloudVisualization
 		private readonly IFrequencyCounter frequencyCounter;
 		private readonly ICloudDrawer layoutDrawer;
 		private readonly LayoutForm layoutForm;
-		private readonly IFilterSettings settings;
+		private readonly ISettings settings;
 
 		public LayoutApp(IEnumerable<ITextFiltration> filtrations, IFrequencyCounter frequencyCounter,
-			ICloudDrawer layoutDrawer, LayoutForm layoutForm, IFilterSettings settings)
+			ICloudDrawer layoutDrawer, LayoutForm layoutForm, ISettings settings)
 		{
 			this.filtrations = filtrations;
 			this.frequencyCounter = frequencyCounter;
@@ -27,8 +27,10 @@ namespace TagsCloudVisualization
 
 		public void Run(string inputFile, string outputFile, int top, int minLegth, int maxLength)
 		{
+			settings.CenterPoint = new Point(0, 0);
 			settings.MaxLength = maxLength;
 			settings.MinLength = minLegth;
+
 			var text = Regex.Split(File.ReadAllText(inputFile), @"[^\p{L}]*\p{Z}[^\p{L}]*").AsEnumerable();
 			text = filtrations.Aggregate(text, (current, filtration) => filtration.Filter(current));
 			var statistics = frequencyCounter.MakeFrequencyStatistics(text, top);

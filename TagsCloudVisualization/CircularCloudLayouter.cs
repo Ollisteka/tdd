@@ -18,6 +18,12 @@ namespace TagsCloudVisualization
 			rectangles = new List<Rectangle>();
 		}
 
+		public CircularCloudLayouter(ISettings settings)
+		{
+			Center = settings.CenterPoint;
+			rectangles = new List<Rectangle>();
+		}
+
 		public Point Center { get; }
 
 		public IReadOnlyCollection<Rectangle> Rectangles => rectangles;
