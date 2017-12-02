@@ -64,11 +64,12 @@ namespace TagsCloudVisualization
 
 			text = filtrations.Aggregate(text, (current, filtration) => filtration.Filter(current));
 			var statistics = frequencyCounter.MakeFrequencyStatistics(text, top);
-			var layoutDrawer = build.Resolve<ICloudDrawer>(new NamedParameter("wordsFrequency", statistics));
-			var layoutForm = build.Resolve<LayoutForm>(new NamedParameter("drawer", layoutDrawer));
+			var layoutDrawer = build.Resolve<ICloudDrawer>();
+			var bitmap = layoutDrawer.DrawWords(statistics);
+			var layoutForm = build.Resolve<LayoutForm>();
 			if (outputFile != null)
-				layoutForm.Bitmap.Save(outputFile);
-			else layoutForm.ShowDialog();
+				bitmap.Save(outputFile);
+			else layoutForm.Show(bitmap);
 		}
 
 		public static IContainer CreateForm()

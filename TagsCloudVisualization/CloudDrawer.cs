@@ -18,11 +18,6 @@ namespace TagsCloudVisualization
 
 		private readonly Dictionary<string, Rectangle> wordsRectangles = new Dictionary<string, Rectangle>();
 
-		public CloudDrawer(Dictionary<string, int> wordsFrequency)
-		{
-			ResizeWords(wordsFrequency);
-		}
-
 		private int OffsetX => Width / 2;
 		private int OffsetY => Height / 2;
 
@@ -32,22 +27,28 @@ namespace TagsCloudVisualization
 		public int Height => wordsRectangles.Values.Max(rectangle => rectangle.Bottom) -
 							wordsRectangles.Values.Min(rectangle => rectangle.Top) + AdditionalHeight;
 
-		public void DrawWords(Graphics g)
+		public Bitmap DrawWords(Dictionary<string, int> wordsFrequency)
 		{
-			g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-			g.SmoothingMode = SmoothingMode.AntiAlias;
-			g.CompositingQuality = CompositingQuality.HighQuality;
-			g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-			foreach (var word in wordsRectangles)
+			ResizeWords(wordsFrequency);
+			var result = new Bitmap(Width, Height);
+			using (var g = Graphics.FromImage(result))
 			{
-				var shiftedRectangle = new Rectangle(word.Value.X + OffsetX, word.Value.Y + OffsetY,
-					word.Value.Width, word.Value.Height);
-				g.DrawString(word.Key, new Font(FontFamily.GenericSansSerif, wordsFonts[word.Key] - 3),
-					new SolidBrush(Color.Black), shiftedRectangle);
+				g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+				g.SmoothingMode = SmoothingMode.AntiAlias;
+				g.CompositingQuality = CompositingQuality.HighQuality;
+				g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+				foreach (var word in wordsRectangles)
+				{
+					var shiftedRectangle = new Rectangle(word.Value.X + OffsetX, word.Value.Y + OffsetY,
+						word.Value.Width, word.Value.Height);
+					g.DrawString(word.Key, new Font(FontFamily.GenericSansSerif, wordsFonts[word.Key] - 3),
+						new SolidBrush(Color.Black), shiftedRectangle);
+				}
 			}
+			return result;
 		}
 
-		public void ResizeWords(Dictionary<string, int> words)
+		private void ResizeWords(Dictionary<string, int> words)
 		{
 			var minFontSize = 15;
 			var maxFontSize = 35;
