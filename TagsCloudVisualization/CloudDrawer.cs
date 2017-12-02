@@ -13,10 +13,15 @@ namespace TagsCloudVisualization
 	{
 		private const int AdditionalHeight = 25;
 		private const int AdditionalWidth = 25;
-		private readonly ICloudLayouter layouter = new CircularCloudLayouter(new Point(0, 0));
+		private readonly ICloudLayouter layouter;
 		private readonly Dictionary<string, float> wordsFonts = new Dictionary<string, float>();
 
 		private readonly Dictionary<string, Rectangle> wordsRectangles = new Dictionary<string, Rectangle>();
+
+		public CloudDrawer(ICloudLayouter layouter)
+		{
+			this.layouter = layouter;
+		}
 
 		private int OffsetX => Width / 2;
 		private int OffsetY => Height / 2;
