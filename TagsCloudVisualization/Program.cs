@@ -47,32 +47,11 @@ namespace TagsCloudVisualization
 			var topWords = arguments["--top"].AsInt;
 			var minLength = arguments["--min"].AsInt;
 			var maxLength = arguments["--max"].AsInt;
-			var build = CreateForm();
-			Run(build, inputFile, outputFile, topWords, minLength, maxLength);
+			CreateApp().Run(inputFile,outputFile,topWords, minLength, maxLength);
 		}
 
-		private static void Run(IContainer build, string inputFile, string outputFile, int top, int minLegth, int maxLength)
-		{
-			var text = Regex.Split(File.ReadAllText(inputFile), @"[^\p{L}]*\p{Z}[^\p{L}]*").AsEnumerable();
-			var filtrations = build.Resolve<IEnumerable<ITextFiltration>>(new List<Parameter>
-				{
-					new NamedParameter("minLength", minLegth),
-					new NamedParameter("maxLength", maxLength)
-				}
-			);
-			var frequencyCounter = build.Resolve<IFrequencyCounter>();
 
-			text = filtrations.Aggregate(text, (current, filtration) => filtration.Filter(current));
-			var statistics = frequencyCounter.MakeFrequencyStatistics(text, top);
-			var layoutDrawer = build.Resolve<ICloudDrawer>();
-			var bitmap = layoutDrawer.DrawWords(statistics);
-			var layoutForm = build.Resolve<LayoutForm>();
-			if (outputFile != null)
-				bitmap.Save(outputFile);
-			else layoutForm.Show(bitmap);
-		}
-
-		public static IContainer CreateForm()
+		public static LayoutApp CreateApp()
 		{
 			var builder = new ContainerBuilder();
 			var assembly = Assembly.GetExecutingAssembly();
@@ -83,12 +62,20 @@ namespace TagsCloudVisualization
 				.AsImplementedInterfaces()
 				.SingleInstance();
 
+			builder.RegisterType<FilterSettings>()
+				.As<IFilterSettings>()
+				.SingleInstance();
+
 			builder.RegisterType<CircularCloudLayouter>().As<ICloudLayouter>();
 			builder.RegisterType<CloudDrawer>().As<ICloudDrawer>();
 			builder.RegisterType<FrequencyCounter>().As<IFrequencyCounter>();
-			builder.RegisterType<LayoutForm>().AsSelf();
 
-			return builder.Build();
+			builder.RegisterType<LayoutForm>().AsSelf();
+			builder.RegisterType<LayoutApp>().AsSelf();
+
+			var build = builder.Build();
+
+			return build.Resolve<LayoutApp>();
 		}
 	}
 }

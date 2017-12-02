@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TagsCloudVisualization.Interfaces;
 
@@ -7,22 +6,20 @@ namespace TagsCloudVisualization.TextProcessing
 {
 	internal class LongWordsFilter : ITextFiltration
 	{
-		private readonly int maxLength = int.MaxValue;
-		private readonly int minLength = 3;
+		private readonly IFilterSettings settings;
 
-		public LongWordsFilter()
+		public LongWordsFilter(IFilterSettings settings)
 		{
+			this.settings = settings;
 		}
 
-		public LongWordsFilter(int minLength=3, int maxLength=int.MaxValue)
-		{
-			this.minLength = minLength;
-			this.maxLength = maxLength;
-		}
+		private int MaxLength => settings.MaxLength;
+		private int MinLength => settings.MinLength;
+
 
 		public IEnumerable<string> Filter(IEnumerable<string> content)
 		{
-			return content.Where(word => word.Length >= minLength && word.Length <= maxLength);
+			return content.Where(word => word.Length >= MinLength && word.Length <= MaxLength);
 		}
 	}
 }

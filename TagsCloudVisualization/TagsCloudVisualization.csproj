@@ -74,7 +74,9 @@
     <Compile Include="CloudDrawer.cs" />
     <Compile Include="Interfaces\ITextFiltration.cs" />
     <Compile Include="Interfaces\ITextReader.cs" />
+    <Compile Include="LayoutApp.cs" />
     <Compile Include="TextProcessing\FileHandler.cs" />
+    <Compile Include="TextProcessing\FilterSettings.cs" />
     <Compile Include="TextProcessing\FrequencyCounter.cs" />
     <Compile Include="Interfaces\ICloudDrawer.cs" />
     <Compile Include="Interfaces\ICloudLayouter.cs" />
@@ -94,6 +96,7 @@
       <DependentUpon>T4DocoptNet.tt</DependentUpon>
     </Compile>
     <Compile Include="TextProcessing\HunspellFilter.cs" />
+    <Compile Include="Interfaces\IFilterSettings.cs" />
     <Compile Include="TextProcessing\LongWordsFilter.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
