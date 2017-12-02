@@ -94,6 +94,7 @@
       <DependentUpon>T4DocoptNet.tt</DependentUpon>
     </Compile>
     <Compile Include="TextProcessing\HunspellFilter.cs" />
+    <Compile Include="TextProcessing\LongWordsFilter.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -5,6 +5,6 @@ namespace TagsCloudVisualization.Interfaces
 {
 	public interface ITextFiltration
 	{
-		IEnumerable<string> Filter();
+		IEnumerable<string> Filter(IEnumerable<string> content);
 	}
 }

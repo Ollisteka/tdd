@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using TagsCloudVisualization.Interfaces;
 
-namespace TagsCloudVisualization
+namespace TagsCloudVisualization.TextProcessing
 {
 	internal class FileHandler : ITextReader
 	{

@@ -13,14 +13,14 @@ namespace TagsCloudVisualization
 	{
 		private const int AdditionalHeight = 25;
 		private const int AdditionalWidth = 25;
-		private readonly CircularCloudLayouter layouter = new CircularCloudLayouter(new Point(0, 0));
+		private readonly ICloudLayouter layouter = new CircularCloudLayouter(new Point(0, 0));
 		private readonly Dictionary<string, float> wordsFonts = new Dictionary<string, float>();
 
 		private readonly Dictionary<string, Rectangle> wordsRectangles = new Dictionary<string, Rectangle>();
 
-		public CloudDrawer(IFrequencyCounter frequencyCounter)
+		public CloudDrawer(Dictionary<string, int> wordsFrequency)
 		{
-			ResizeWords(frequencyCounter.MakeFrequencyStatistics());
+			ResizeWords(wordsFrequency);
 		}
 
 		private int OffsetX => Width / 2;

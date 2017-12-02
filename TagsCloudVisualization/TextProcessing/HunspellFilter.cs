@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NHunspell;
@@ -9,22 +8,21 @@ namespace TagsCloudVisualization.TextProcessing
 {
 	internal class HunspellFilter : ITextFiltration
 	{
-		private readonly Func<string, bool> predicate;
-		private readonly Func<string, string> selector;
-		private readonly IEnumerable<string> text;
-
-		public HunspellFilter(ITextReader reader, Func<string, bool> predicate, Func<string, string> selector)
+		public IEnumerable<string> Filter(IEnumerable<string> content)
 		{
-			this.predicate = predicate;
-			this.selector = selector;
-			text = reader.GetText();
-		}
-
-		public IEnumerable<string> Filter()
-		{
-				return text
-					.Where(predicate)
-					.Select(selector);
+			var solutiondir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+			using (var hunspell =
+				new Hunspell(solutiondir + "//dictionaries//ru_RU.aff", solutiondir + "//dictionaries//ru_RU.dic"))
+			{
+				return content
+					.Select(x =>
+					{
+						var word = x.ToLower();
+						var stems = hunspell.Stem(word);
+						return stems.Any() ? stems[0] : word;
+					})
+					.ToList();
+			}
 		}
 	}
 }
