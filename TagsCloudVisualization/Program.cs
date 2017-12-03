@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using Autofac;
-using Autofac.Core;
 using DocoptNet;
 using TagsCloudVisualization.Interfaces;
 using TagsCloudVisualization.TextProcessing;
@@ -47,7 +44,7 @@ namespace TagsCloudVisualization
 			var topWords = arguments["--top"].AsInt;
 			var minLength = arguments["--min"].AsInt;
 			var maxLength = arguments["--max"].AsInt;
-			CreateApp().Run(inputFile,outputFile,topWords, minLength, maxLength);
+			CreateApp().Run(inputFile, outputFile, topWords, minLength, maxLength);
 		}
 
 
@@ -65,6 +62,8 @@ namespace TagsCloudVisualization
 			builder.RegisterType<Settings>()
 				.As<ISettings>()
 				.SingleInstance();
+
+			builder.RegisterType<DocReader>().As<IFileReader>();
 
 			builder.RegisterType<CircularCloudLayouter>().As<ICloudLayouter>();
 			builder.RegisterType<CloudDrawer>().As<ICloudDrawer>();

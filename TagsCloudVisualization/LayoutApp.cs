@@ -13,16 +13,18 @@ namespace TagsCloudVisualization
 		private readonly IFrequencyCounter frequencyCounter;
 		private readonly ICloudDrawer layoutDrawer;
 		private readonly LayoutForm layoutForm;
+		private readonly IFileReader reader;
 		private readonly ISettings settings;
 
 		public LayoutApp(IEnumerable<ITextFiltration> filtrations, IFrequencyCounter frequencyCounter,
-			ICloudDrawer layoutDrawer, LayoutForm layoutForm, ISettings settings)
+			ICloudDrawer layoutDrawer, LayoutForm layoutForm, ISettings settings, IFileReader reader)
 		{
 			this.filtrations = filtrations;
 			this.frequencyCounter = frequencyCounter;
 			this.layoutDrawer = layoutDrawer;
 			this.layoutForm = layoutForm;
 			this.settings = settings;
+			this.reader = reader;
 		}
 
 		public void Run(string inputFile, string outputFile, int top, int minLegth, int maxLength)
@@ -31,7 +33,7 @@ namespace TagsCloudVisualization
 			settings.MaxLength = maxLength;
 			settings.MinLength = minLegth;
 
-			var text = Regex.Split(File.ReadAllText(inputFile), @"[^\p{L}]*\p{Z}[^\p{L}]*").AsEnumerable();
+			var text = reader.GetText(inputFile);
 			text = filtrations.Aggregate(text, (current, filtration) => filtration.Filter(current));
 			var statistics = frequencyCounter.MakeFrequencyStatistics(text, top);
 			var bitmap = layoutDrawer.DrawWords(statistics);

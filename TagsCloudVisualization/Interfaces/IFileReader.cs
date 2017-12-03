@@ -2,8 +2,8 @@
 
 namespace TagsCloudVisualization.Interfaces
 {
-	public interface ITextReader
+	public interface IFileReader
 	{
-		IEnumerable<string> GetText();
+		IEnumerable<string> GetText(string filename);
 	}
 }

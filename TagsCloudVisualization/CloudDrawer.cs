@@ -11,8 +11,8 @@ namespace TagsCloudVisualization
 {
 	public class CloudDrawer : ICloudDrawer
 	{
-		private const int AdditionalHeight = 25;
-		private const int AdditionalWidth = 25;
+		private const int AdditionalHeight = 55;
+		private const int AdditionalWidth = 55;
 		private readonly ICloudLayouter layouter;
 		private readonly Dictionary<string, float> wordsFonts = new Dictionary<string, float>();
 
@@ -62,6 +62,8 @@ namespace TagsCloudVisualization
 			foreach (var word in words)
 			{
 				var weight = Math.Log((float) word.Value / minFrequency) / Math.Log((float) maxFrequency / minFrequency);
+				if (double.IsNaN(weight))
+					weight = 2;
 				var fontSize = minFontSize + (float) Math.Round((maxFontSize - minFontSize) * weight);
 				//var fontSize = ((float)word.Value / maxFrequency) * (maxFontSize - minFontSize) + minFontSize;
 				var font = new Font(FontFamily.GenericSansSerif, fontSize);
