@@ -15,7 +15,7 @@ namespace TagsCloudVisualization
 				Bitmap.Height);
 		}
 
-		internal void Show(Bitmap bitmap)
+		internal void ShowLayout(Bitmap bitmap)
 		{
 			Bitmap = bitmap;
 			Width = bitmap.Width;

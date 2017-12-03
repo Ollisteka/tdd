@@ -92,6 +92,7 @@
     <Compile Include="Interfaces\ITextFiltration.cs" />
     <Compile Include="Interfaces\IFileReader.cs" />
     <Compile Include="LayoutApp.cs" />
+    <Compile Include="LayoutApp_Should.cs" />
     <Compile Include="TextProcessing\DocReader.cs" />
     <Compile Include="TextProcessing\TxtReader.cs" />
     <Compile Include="Settings.cs" />

@@ -36,8 +36,8 @@ namespace TagsCloudVisualization
 			var statistics = frequencyCounter.MakeFrequencyStatistics(text, top);
 			var bitmap = layoutDrawer.DrawWords(statistics);
 			if (outputFile != null)
-				bitmap.Save(outputFile);
-			else layoutForm.Show(bitmap);
+				bitmap?.Save(outputFile);
+			else layoutForm.ShowLayout(bitmap);
 		}
 	}
 }
