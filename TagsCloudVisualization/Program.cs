@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Autofac;
 using DocoptNet;
@@ -15,14 +13,15 @@ namespace TagsCloudVisualization
 
 	Usage:
 	  TagsCloudVisualization.exe <inputfile>
-	  TagsCloudVisualization.exe [-t NUM | --top=NUM] [-o FILE] <inputfile>
-	  TagsCloudVisualization.exe [--min=NUM] [--max=NUM] <inputfile>
+	  TagsCloudVisualization.exe [-t NUM | --top=NUM] [-o FILE] [--min=NUM] [--max=NUM] [--lower=NUM] [--upper=NUM] <inputfile>
 	  TagsCloudVisualization.exe (-h | --help)
 
 	Options:
 	  -o FILE            Specify output file. 
 	  --min=NUM          Specify the minimum words'length [default: 3]
 	  --max=NUM          Specify the maximum words'length [default: 100]
+	  --lower=NUM        Specify the minimum words'font size [default: 15]
+	  --upper=Num        Specify the maximum words'font size  [default: 35]
 	  -t NUM --top=NUM   Specify how many words to show [default: 50]
 	  -h --help          Show this screen.
 
@@ -44,7 +43,9 @@ namespace TagsCloudVisualization
 			var topWords = arguments["--top"].AsInt;
 			var minLength = arguments["--min"].AsInt;
 			var maxLength = arguments["--max"].AsInt;
-			CreateApp().Run(inputFile, outputFile, topWords, minLength, maxLength);
+			var minFont = arguments["--lower"].AsInt;
+			var maxFont = arguments["--upper"].AsInt;
+			CreateApp().Run(inputFile, outputFile, topWords, minLength, maxLength, minFont, maxFont);
 		}
 
 

@@ -13,8 +13,8 @@ namespace TagsCloudVisualization.TextProcessing
 			this.settings = settings;
 		}
 
-		private int MaxLength => settings.MaxLength;
-		private int MinLength => settings.MinLength;
+		private int MaxLength => settings.MaxWordLength;
+		private int MinLength => settings.MinWordLength;
 
 
 		public IEnumerable<string> Filter(IEnumerable<string> content)

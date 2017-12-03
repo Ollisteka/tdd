@@ -17,10 +17,12 @@ namespace TagsCloudVisualization
 		private readonly Dictionary<string, float> wordsFonts = new Dictionary<string, float>();
 
 		private readonly Dictionary<string, Rectangle> wordsRectangles = new Dictionary<string, Rectangle>();
+		private readonly ISettings settings;
 
-		public CloudDrawer(ICloudLayouter layouter)
+		public CloudDrawer(ICloudLayouter layouter, ISettings settings)
 		{
 			this.layouter = layouter;
+			this.settings = settings;
 		}
 
 		private int OffsetX => Width / 2;
@@ -46,7 +48,7 @@ namespace TagsCloudVisualization
 				{
 					var shiftedRectangle = new Rectangle(word.Value.X + OffsetX, word.Value.Y + OffsetY,
 						word.Value.Width, word.Value.Height);
-					g.DrawString(word.Key, new Font(FontFamily.GenericSansSerif, wordsFonts[word.Key] - 3),
+					g.DrawString(word.Key, new Font(FontFamily.GenericSansSerif, wordsFonts[word.Key]),
 						new SolidBrush(Color.Black), shiftedRectangle);
 				}
 			}
@@ -55,8 +57,8 @@ namespace TagsCloudVisualization
 
 		private void ResizeWords(Dictionary<string, int> words)
 		{
-			var minFontSize = 15;
-			var maxFontSize = 35;
+			var minFontSize = settings.MinWordFont;
+			var maxFontSize = settings.MaxWordFont;
 			var maxFrequency = words.Values.Max();
 			var minFrequency = words.Values.Min();
 			foreach (var word in words)
@@ -65,7 +67,7 @@ namespace TagsCloudVisualization
 				if (double.IsNaN(weight))
 					weight = 2;
 				var fontSize = minFontSize + (float) Math.Round((maxFontSize - minFontSize) * weight);
-				//var fontSize = ((float)word.Value / maxFrequency) * (maxFontSize - minFontSize) + minFontSize;
+
 				var font = new Font(FontFamily.GenericSansSerif, fontSize);
 				var tagSize = TextRenderer.MeasureText(word.Key, font);
 				wordsRectangles[word.Key] = layouter.PutNextRectangle(tagSize);

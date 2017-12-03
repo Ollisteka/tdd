@@ -25,11 +25,13 @@ namespace TagsCloudVisualization
 			this.reader = reader;
 		}
 
-		public void Run(string inputFile, string outputFile, int top, int minLegth, int maxLength)
+		public void Run(string inputFile, string outputFile, int top=100, int minLegth=3, int maxLength=100, int minFont=25, int maxFont=55)
 		{
 			settings.CenterPoint = new Point(0, 0);
-			settings.MaxLength = maxLength;
-			settings.MinLength = minLegth;
+			settings.MaxWordLength = maxLength;
+			settings.MinWordLength = minLegth;
+			settings.MinWordFont = minFont;
+			settings.MaxWordFont = maxFont;
 
 			var text = reader.GetText(inputFile);
 			text = filtrations.Aggregate(text, (current, filtration) => filtration.Filter(current));

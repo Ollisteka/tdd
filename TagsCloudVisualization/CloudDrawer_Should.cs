@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Moq;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ namespace TagsCloudVisualization
 		public void SetUp()
 		{
 			layouter = new Mock<ICloudLayouter>();
-			drawer = new CloudDrawer(layouter.Object);
+			drawer = new CloudDrawer(layouter.Object, new Settings());
 		}
 
 		private ICloudDrawer drawer;

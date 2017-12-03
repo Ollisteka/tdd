@@ -6,28 +6,53 @@ namespace TagsCloudVisualization
 {
 	public class Settings : ISettings
 	{
-		private int maxLength;
-		private int minLength;
+		private int maxWordFont = 100;
+		private int maxWordLength = 100;
+		private int minWordFont = 3;
+		private int minWordLength = 3;
 
-		public int MaxLength
+
+		public int MaxWordLength
 		{
-			get => maxLength;
+			get => maxWordLength;
 			set
 			{
-				if (value < MinLength)
+				if (value < MinWordLength)
 					throw new ArgumentException("Max length can't be less then min length");
-				maxLength = value;
+				maxWordLength = value;
 			}
 		}
 
-		public int MinLength
+		public int MinWordLength
 		{
-			get => minLength;
+			get => minWordLength;
 			set
 			{
-				if (value > MaxLength)
+				if (value > MaxWordLength)
 					throw new ArgumentException("Min length can't be bigger then max length");
-				minLength = value < 2 ? 2 : value;
+				minWordLength = value < 2 ? 2 : value;
+			}
+		}
+
+		public int MinWordFont
+		{
+			get => minWordFont;
+			set
+			{
+				if (value > MaxWordFont)
+					throw new ArgumentException("Min font size can't be bigger then max size");
+				minWordFont = value < 1 ? 1 : value;
+			}
+		}
+
+		public int MaxWordFont
+		{
+			get => maxWordFont;
+			set
+			{
+				if (value < MinWordFont)
+					throw new ArgumentException("Max font size can't be less then min size");
+				maxWordFont = value;
 			}
 		}
 
