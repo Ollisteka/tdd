@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using TagsCloudVisualization.Interfaces;
@@ -11,18 +12,18 @@ namespace TagsCloudVisualization
 		private readonly IFrequencyCounter frequencyCounter;
 		private readonly ICloudDrawer layoutDrawer;
 		private readonly LayoutForm layoutForm;
-		private readonly IFileReader reader;
+		private readonly IEnumerable<IFileReader> readers;
 		private readonly ISettings settings;
 
 		public LayoutApp(IEnumerable<ITextFiltration> filtrations, IFrequencyCounter frequencyCounter,
-			ICloudDrawer layoutDrawer, LayoutForm layoutForm, ISettings settings, IFileReader reader)
+			ICloudDrawer layoutDrawer, LayoutForm layoutForm, ISettings settings, IEnumerable<IFileReader> readers)
 		{
 			this.filtrations = filtrations;
 			this.frequencyCounter = frequencyCounter;
 			this.layoutDrawer = layoutDrawer;
 			this.layoutForm = layoutForm;
 			this.settings = settings;
-			this.reader = reader;
+			this.readers = readers;
 		}
 
 		public void Run(string inputFile, string outputFile, int top=100, int minLegth=3, int maxLength=100, int minFont=25, int maxFont=55)
@@ -33,7 +34,12 @@ namespace TagsCloudVisualization
 			settings.MinWordFont = minFont;
 			settings.MaxWordFont = maxFont;
 
-			var text = reader.GetText(inputFile);
+			IEnumerable<string> text = null;
+			foreach (var reader in readers)
+				if (reader.TryGetText(inputFile, out text))
+					break;
+			if (text == null)
+				throw new Exception("The input file extension is not supported!");
 			text = filtrations.Aggregate(text, (current, filtration) => filtration.Filter(current));
 			var statistics = frequencyCounter.MakeFrequencyStatistics(text, top);
 			var bitmap = layoutDrawer.DrawWords(statistics);

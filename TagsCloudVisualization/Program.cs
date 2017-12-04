@@ -60,6 +60,12 @@ namespace TagsCloudVisualization
 				.AsImplementedInterfaces()
 				.SingleInstance();
 
+			builder
+				.RegisterAssemblyTypes(assembly)
+				.AssignableTo<IFileReader>()
+				.AsImplementedInterfaces()
+				.SingleInstance();
+
 			builder.RegisterType<Settings>()
 				.As<ISettings>()
 				.SingleInstance();

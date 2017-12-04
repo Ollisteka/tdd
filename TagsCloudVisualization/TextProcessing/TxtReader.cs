@@ -9,11 +9,18 @@ namespace TagsCloudVisualization.TextProcessing
 {
 	internal class TxtReader : IFileReader
 	{
-		public IEnumerable<string> GetText(string filename)
+		private readonly IReadOnlyCollection<string> supportedExtensions = new List<string> { ".txt" };
+		public bool TryGetText(string filename, out IEnumerable<string> text)
 		{
-			return Regex
+			if (!supportedExtensions.Contains(Path.GetExtension(filename)))
+			{
+				text = null;
+				return false;
+			}
+			text =  Regex
 				.Split(File.ReadAllText(filename), @"[^\p{L}]*\p{Z}[^\p{L}]*")
-				.Select(word => word.Trim(Environment.NewLine.ToCharArray())); ;
+				.Select(word => word.Trim(Environment.NewLine.ToCharArray()));
+			return true;
 		}
 	}
 }
