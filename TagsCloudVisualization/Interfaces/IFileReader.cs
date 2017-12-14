@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using CSharpFunctionalExtensions;
 
 namespace TagsCloudVisualization.Interfaces
 {
 	public interface IFileReader
 	{
-		bool TryGetText(string filename, out IEnumerable<string> text);
+		Result<IEnumerable<string>> TryGetText(string filename);
 	}
 }

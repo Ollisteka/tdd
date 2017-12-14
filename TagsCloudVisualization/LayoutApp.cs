@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using CSharpFunctionalExtensions;
 using TagsCloudVisualization.Interfaces;
 
 namespace TagsCloudVisualization
@@ -34,13 +35,21 @@ namespace TagsCloudVisualization
 			settings.MinWordFont = minFont;
 			settings.MaxWordFont = maxFont;
 
-			IEnumerable<string> text = null;
+			var result = Result.Fail<IEnumerable<string>>("There is no reader registered in DI container");
 			foreach (var reader in readers)
-				if (reader.TryGetText(inputFile, out text))
+			{
+				result = reader.TryGetText(inputFile);
+				if (result.IsSuccess)
 					break;
-			if (text == null)
-				throw new Exception("The input file extension is not supported!");
-			text = filtrations.Aggregate(text, (current, filtration) => filtration.Filter(current));
+			}
+			if (result.IsFailure)
+			{
+				Console.WriteLine(result.Error);
+				Console.WriteLine("\nPress ESC to exit");
+				while (Console.ReadKey(true).Key != ConsoleKey.Escape){};
+				Environment.Exit(1);
+			};
+			var text = filtrations.Aggregate(result.Value, (current, filtration) => filtration.Filter(current));
 			var statistics = frequencyCounter.MakeFrequencyStatistics(text, top);
 			var bitmap = layoutDrawer.DrawWords(statistics);
 			if (outputFile != null)

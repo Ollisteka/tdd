@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CSharpFunctionalExtensions;
 using Moq;
 using NUnit.Framework;
 using TagsCloudVisualization.Interfaces;
@@ -15,7 +16,7 @@ namespace TagsCloudVisualization
 			filterMock1 = new Mock<ITextFiltration>();
 			filterMock2 = new Mock<ITextFiltration>();
 			readerMock1 = new Mock<IFileReader>();
-			readerMock1.Setup(reader => reader.TryGetText(Input, out words)).Returns(true);
+			readerMock1.Setup(reader => reader.TryGetText(Input)).Returns(Result.Ok(words));
 			readerMock2 = new Mock<IFileReader>();
 
 			drawerMock = new Mock<ICloudDrawer>();
@@ -29,6 +30,7 @@ namespace TagsCloudVisualization
 				formMock.Object, settingsMock.Object, new[] {readerMock1.Object, readerMock2.Object});
 		}
 
+		private const string Error = "Error";
 		private const string Input = "input";
 		public readonly string Output = "output";
 		private const int Top = 5;
@@ -53,11 +55,11 @@ namespace TagsCloudVisualization
 		[Test]
 		public void LayoutApp_Shoud_GetTextFromReader()
 		{
-			readerMock1.Setup(reader => reader.TryGetText(Input, out words)).Returns(false);
-			readerMock2.Setup(reader => reader.TryGetText(Input, out words)).Returns(true);
+			readerMock1.Setup(reader => reader.TryGetText(Input)).Returns(Result.Fail<IEnumerable<string>>(Error));
+			readerMock2.Setup(reader => reader.TryGetText(Input)).Returns(Result.Ok(words));
 			layoutApp.Run(Input, Output);
-			readerMock1.Verify(reader => reader.TryGetText(Input, out words), Times.Once);
-			readerMock2.Verify(reader => reader.TryGetText(Input, out words), Times.Once);
+			readerMock1.Verify(reader => reader.TryGetText(Input), Times.Once);
+			readerMock2.Verify(reader => reader.TryGetText(Input), Times.Once);
 		}
 
 		[Test]
