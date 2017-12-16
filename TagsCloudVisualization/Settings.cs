@@ -18,7 +18,7 @@ namespace TagsCloudVisualization
 			set
 			{
 				if (value < MinWordLength)
-					throw new ArgumentException("Max length can't be less then min length");
+					throw new ArgumentException($"Max length ({value}) can't be less then min length ({minWordLength})");
 				maxWordLength = value;
 			}
 		}
@@ -29,7 +29,7 @@ namespace TagsCloudVisualization
 			set
 			{
 				if (value > MaxWordLength)
-					throw new ArgumentException("Min length can't be bigger then max length");
+					throw new ArgumentException($"Min length ({value}) can't be bigger then max length ({maxWordLength})");
 				minWordLength = value < 2 ? 2 : value;
 			}
 		}
@@ -40,7 +40,7 @@ namespace TagsCloudVisualization
 			set
 			{
 				if (value > MaxWordFont)
-					throw new ArgumentException("Min font size can't be bigger then max size");
+					throw new ArgumentException($"Min font size ({value}) can't be bigger then max size ({maxWordFont})");
 				minWordFont = value < 1 ? 1 : value;
 			}
 		}
@@ -51,7 +51,7 @@ namespace TagsCloudVisualization
 			set
 			{
 				if (value < MinWordFont)
-					throw new ArgumentException("Max font size can't be less then min size");
+					throw new ArgumentException($"Max font size ({value}) can't be less then min size ({minWordFont})");
 				maxWordFont = value;
 			}
 		}

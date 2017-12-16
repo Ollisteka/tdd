@@ -27,13 +27,10 @@ namespace TagsCloudVisualization
 			this.readers = readers;
 		}
 
-		public void Run(string inputFile, string outputFile, int top=100, int minLegth=3, int maxLength=100, int minFont=25, int maxFont=55)
+		public void Run(string inputFile, string outputFile, int top = 100, int minLegth = 3, int maxLength = 100,
+			int minFont = 25, int maxFont = 55)
 		{
-			settings.CenterPoint = new Point(0, 0);
-			settings.MaxWordLength = maxLength;
-			settings.MinWordLength = minLegth;
-			settings.MinWordFont = minFont;
-			settings.MaxWordFont = maxFont;
+			InitSettings(maxLength, minLegth, minFont, maxFont);
 
 			var result = Result.Fail<IEnumerable<string>>("There is no reader registered in DI container");
 			foreach (var reader in readers)
@@ -52,11 +49,30 @@ namespace TagsCloudVisualization
 			else layoutForm.ShowLayout(bitmap);
 		}
 
+		private void InitSettings(int maxLength, int minLegth, int minFont, int maxFont)
+		{
+			try
+			{
+				settings.CenterPoint = new Point(0, 0);
+				settings.MaxWordLength = maxLength;
+				settings.MinWordLength = minLegth;
+				settings.MinWordFont = minFont;
+				settings.MaxWordFont = maxFont;
+			}
+			catch (Exception e)
+			{
+				ExitWithError("Input argumenrs are inconsistent. " + e.Message);
+			}
+		}
+
 		public static void ExitWithError(string errorMessage)
 		{
 			Console.WriteLine(errorMessage);
 			Console.WriteLine("\nPress ESC to exit");
-			while (Console.ReadKey(true).Key != ConsoleKey.Escape) { };
+			while (Console.ReadKey(true).Key != ConsoleKey.Escape)
+			{
+			}
+			;
 			Environment.Exit(1);
 		}
 	}
