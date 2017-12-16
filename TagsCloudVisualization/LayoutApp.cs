@@ -43,18 +43,21 @@ namespace TagsCloudVisualization
 					break;
 			}
 			if (result.IsFailure)
-			{
-				Console.WriteLine(result.Error);
-				Console.WriteLine("\nPress ESC to exit");
-				while (Console.ReadKey(true).Key != ConsoleKey.Escape){};
-				Environment.Exit(1);
-			};
+				ExitWithError(result.Error);
 			var text = filtrations.Aggregate(result.Value, (current, filtration) => filtration.Filter(current));
 			var statistics = frequencyCounter.MakeFrequencyStatistics(text, top);
 			var bitmap = layoutDrawer.DrawWords(statistics);
 			if (outputFile != null)
 				bitmap?.Save(outputFile);
 			else layoutForm.ShowLayout(bitmap);
+		}
+
+		public static void ExitWithError(string errorMessage)
+		{
+			Console.WriteLine(errorMessage);
+			Console.WriteLine("\nPress ESC to exit");
+			while (Console.ReadKey(true).Key != ConsoleKey.Escape) { };
+			Environment.Exit(1);
 		}
 	}
 }

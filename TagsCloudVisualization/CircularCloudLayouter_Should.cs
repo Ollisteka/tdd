@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using static TagsCloudVisualization.LayouterHelper;
+using static TagsCloudVisualization.Helpers.LayouterHelper;
 
 namespace TagsCloudVisualization
 {

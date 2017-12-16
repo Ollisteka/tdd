@@ -87,6 +87,7 @@
     <Compile Include="Interfaces\IFileReader.cs" />
     <Compile Include="LayoutApp.cs" />
     <Compile Include="LayoutApp_Should.cs" />
+    <Compile Include="Helpers\ResultExtension.cs" />
     <Compile Include="TextProcessing\DocReader.cs" />
     <Compile Include="TextProcessing\TxtReader.cs" />
     <Compile Include="Settings.cs" />
@@ -94,7 +95,7 @@
     <Compile Include="Interfaces\ICloudDrawer.cs" />
     <Compile Include="Interfaces\ICloudLayouter.cs" />
     <Compile Include="Interfaces\IFrequencyCounter.cs" />
-    <Compile Include="LayouterHelper.cs" />
+    <Compile Include="Helpers\LayouterHelper.cs" />
     <Compile Include="LayoutForm.cs">
       <SubType>Form</SubType>
     </Compile>
