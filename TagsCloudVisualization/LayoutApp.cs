@@ -32,17 +32,19 @@ namespace TagsCloudVisualization
 		{
 			InitSettings(maxLength, minLegth, minFont, maxFont);
 
-			var result = Result.Fail<IEnumerable<string>>("There is no reader registered in DI container");
+			var textResult = Result.Fail<IEnumerable<string>>("There is no reader registered in DI container");
 			foreach (var reader in readers)
 			{
-				result = reader.TryGetText(inputFile);
-				if (result.IsSuccess)
+				textResult = reader.TryGetText(inputFile);
+				if (textResult.IsSuccess)
 					break;
 			}
-			if (result.IsFailure)
-				ExitWithError(result.Error);
-			var text = filtrations.Aggregate(result.Value, (current, filtration) => filtration.Filter(current));
+			if (textResult.IsFailure)
+				ExitWithError(textResult.Error);
+			var text = filtrations.Aggregate(textResult.Value, (current, filtration) => filtration.Filter(current));
 			var statistics = frequencyCounter.MakeFrequencyStatistics(text, top);
+			if (!statistics.Any())
+				ExitWithError("No words was found to match your requirements:\n\n" + settings);
 			var bitmap = layoutDrawer.DrawWords(statistics);
 			if (outputFile != null)
 				bitmap?.Save(outputFile);

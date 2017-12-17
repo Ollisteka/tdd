@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Reflection;
+using System.Text;
 using TagsCloudVisualization.Interfaces;
 
 namespace TagsCloudVisualization
@@ -10,6 +12,7 @@ namespace TagsCloudVisualization
 		private int maxWordLength = 100;
 		private int minWordFont = 3;
 		private int minWordLength = 3;
+		private PropertyInfo[] propertyInfo;
 
 
 		public int MaxWordLength
@@ -57,5 +60,21 @@ namespace TagsCloudVisualization
 		}
 
 		public Point CenterPoint { get; set; }
+
+		public override string ToString()
+		{
+			if (propertyInfo == null)
+				propertyInfo = GetType().GetProperties();
+
+			var sb = new StringBuilder();
+
+			foreach (var info in propertyInfo)
+			{
+				var value = info.GetValue(this, null) ?? "(null)";
+				sb.AppendLine($"{info.Name}: {value}");
+			}
+
+			return sb.ToString();
+		}
 	}
 }

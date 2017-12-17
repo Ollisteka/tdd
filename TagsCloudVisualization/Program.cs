@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using Autofac;
 using DocoptNet;
@@ -45,9 +46,21 @@ namespace TagsCloudVisualization
 			var maxLength = arguments["--max"].AsInt;
 			var minFont = arguments["--lower"].AsInt;
 			var maxFont = arguments["--upper"].AsInt;
+
+			CheckForFilesExistance(inputFile, outputFile);
+			if (topWords <= 0)
+				LayoutApp.ExitWithError($"The amount of words to print should be positive. You had: {topWords}");
+
 			CreateApp().Run(inputFile, outputFile, topWords, minLength, maxLength, minFont, maxFont);
 		}
 
+
+		private static void CheckForFilesExistance(params string[] filenames)
+		{
+			foreach (var file in filenames)
+				if (!string.IsNullOrEmpty(file) && !File.Exists(file))
+					LayoutApp.ExitWithError($"File \"{file}\" doesn't exist");
+		}
 
 		public static LayoutApp CreateApp()
 		{
