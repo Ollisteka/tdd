@@ -14,10 +14,10 @@ namespace TagsCloudVisualization
 		private const int AdditionalHeight = 55;
 		private const int AdditionalWidth = 55;
 		private readonly ICloudLayouter layouter;
+		private readonly ISettings settings;
 		private readonly Dictionary<string, float> wordsFonts = new Dictionary<string, float>();
 
 		private readonly Dictionary<string, Rectangle> wordsRectangles = new Dictionary<string, Rectangle>();
-		private readonly ISettings settings;
 
 		public CloudDrawer(ICloudLayouter layouter, ISettings settings)
 		{

@@ -1,33 +1,10 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 using System.Collections;
 using System.Collections.Generic;
 using DocoptNet;
 
 namespace TagsCloudVisualization
 {
-
-    // Generated class for Main.usage.txt
+	// Generated class for Main.usage.txt
 	public class MainArgs
 	{
 		public const string USAGE = @"Example usage for T4 Docopt.NET
@@ -70,31 +47,24 @@ Explanation:
     }
 
 ";
-	    private readonly IDictionary<string, ValueObject> _args;
+
 		public MainArgs(ICollection<string> argv, bool help = true,
-                                                      object version = null, bool optionsFirst = false, bool exit = false)
+			object version = null, bool optionsFirst = false, bool exit = false)
 		{
-			_args = new Docopt().Apply(USAGE, argv, help, version, optionsFirst, exit);
+			Args = new Docopt().Apply(USAGE, argv, help, version, optionsFirst, exit);
 		}
 
-        public IDictionary<string, ValueObject> Args
-        {
-            get { return _args; }
-        }
+		public IDictionary<string, ValueObject> Args { get; }
 
-public bool CmdCommand { get { return _args["command"].IsTrue; } }
-		public string ArgArg { get { return null == _args["ARG"] ? null : _args["ARG"].ToString(); } }
-		public string ArgMyarg  { get { return null == _args["<myarg>"] ? null : _args["<myarg>"].ToString(); } }
-		public string ArgOptionalarg { get { return null == _args["OPTIONALARG"] ? null : _args["OPTIONALARG"].ToString(); } }
-		public bool OptO { get { return _args["-o"].IsTrue; } }
-		public string OptS { get { return null == _args["-s"] ? null : _args["-s"].ToString(); } }
-		public string OptLong { get { return null == _args["--long"] ? null : _args["--long"].ToString(); } }
-		public bool OptSwitch { get { return _args["--switch"].IsTrue; } }
-		public bool CmdFiles { get { return _args["files"].IsTrue; } }
-		public ArrayList ArgFile { get { return _args["FILE"].AsList; } }
-	
+		public bool CmdCommand => Args["command"].IsTrue;
+		public string ArgArg => null == Args["ARG"] ? null : Args["ARG"].ToString();
+		public string ArgMyarg => null == Args["<myarg>"] ? null : Args["<myarg>"].ToString();
+		public string ArgOptionalarg => null == Args["OPTIONALARG"] ? null : Args["OPTIONALARG"].ToString();
+		public bool OptO => Args["-o"].IsTrue;
+		public string OptS => null == Args["-s"] ? null : Args["-s"].ToString();
+		public string OptLong => null == Args["--long"] ? null : Args["--long"].ToString();
+		public bool OptSwitch => Args["--switch"].IsTrue;
+		public bool CmdFiles => Args["files"].IsTrue;
+		public ArrayList ArgFile => Args["FILE"].AsList;
 	}
-
-	
 }
-

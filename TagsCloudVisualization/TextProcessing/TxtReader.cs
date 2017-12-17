@@ -1,16 +1,17 @@
-﻿	using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-	using CSharpFunctionalExtensions;
-	using TagsCloudVisualization.Interfaces;
+using CSharpFunctionalExtensions;
+using TagsCloudVisualization.Interfaces;
 
 namespace TagsCloudVisualization.TextProcessing
 {
 	internal class TxtReader : IFileReader
 	{
-		private readonly IReadOnlyCollection<string> supportedExtensions = new List<string> { ".txt" };
+		private readonly IReadOnlyCollection<string> supportedExtensions = new List<string> {".txt"};
+
 		public Result<IEnumerable<string>> TryGetText(string filename)
 		{
 			if (!supportedExtensions.Contains(Path.GetExtension(filename)))

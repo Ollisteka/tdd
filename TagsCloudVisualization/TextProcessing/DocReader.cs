@@ -15,11 +15,12 @@ namespace TagsCloudVisualization.TextProcessing
 	{
 		private readonly IReadOnlyCollection<string> supportedExtensions = new List<string> {".doc", ".docx"};
 
-		public Result<IEnumerable<string>> TryGetText(string filename){
+		public Result<IEnumerable<string>> TryGetText(string filename)
+		{
 			if (!supportedExtensions.Contains(Path.GetExtension(filename)))
 				return Result.Fail<IEnumerable<string>>(
 					$"The extension {Path.GetExtension(filename)} is not supported by this reader");
-			
+
 			var doc = new Document();
 			doc.LoadFromFile(filename);
 			var sb = new StringBuilder();

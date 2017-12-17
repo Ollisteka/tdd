@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using CSharpFunctionalExtensions;
 using Moq;
 using NUnit.Framework;
@@ -13,8 +14,10 @@ namespace TagsCloudVisualization
 		public void SetUp()
 		{
 			words = new List<string> {"Hello", "world"};
+			statistics = words.ToDictionary(key => key, val => 10);
 			filterMock1 = new Mock<ITextFiltration>();
 			filterMock2 = new Mock<ITextFiltration>();
+
 			readerMock1 = new Mock<IFileReader>();
 			readerMock1.Setup(reader => reader.TryGetText(Input)).Returns(Result.Ok(words));
 			readerMock2 = new Mock<IFileReader>();
@@ -24,6 +27,7 @@ namespace TagsCloudVisualization
 			settingsMock = new Mock<ISettings>();
 
 			frequencyCounterMock = new Mock<IFrequencyCounter>();
+			frequencyCounterMock.Setup(stat => stat.MakeFrequencyStatistics(words, Top)).Returns(statistics);
 
 			layoutApp = new LayoutApp(new[] {filterMock1.Object, filterMock2.Object}, frequencyCounterMock.Object,
 				drawerMock.Object,
@@ -44,6 +48,7 @@ namespace TagsCloudVisualization
 		private Mock<IFileReader> readerMock2;
 		private Mock<ITextFiltration> filterMock2;
 		private IEnumerable<string> words;
+		private Dictionary<string, int> statistics;
 
 		[Test]
 		public void LayoutApp_Shoud_DrawWords()
@@ -77,7 +82,7 @@ namespace TagsCloudVisualization
 		public void LayoutApp_Should_GetStatistics()
 		{
 			filterMock2.Setup(filter => filter.Filter(It.IsAny<List<string>>())).Returns(words);
-			frequencyCounterMock.Setup(stat => stat.MakeFrequencyStatistics(words, Top));
+			
 
 			layoutApp.Run(Input, Output, Top);
 

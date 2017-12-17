@@ -43,7 +43,7 @@ namespace TagsCloudVisualization
 				ExitWithError(textResult.Error);
 			var text = filtrations.Aggregate(textResult.Value, (current, filtration) => filtration.Filter(current));
 			var statistics = frequencyCounter.MakeFrequencyStatistics(text, top);
-			if (!statistics.Any())
+			if (statistics?.Count == 0)
 				ExitWithError("No words was found to match your requirements:\n\n" + settings);
 			var bitmap = layoutDrawer.DrawWords(statistics);
 			if (outputFile != null)
