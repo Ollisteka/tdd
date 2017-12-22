@@ -82,7 +82,7 @@ namespace TagsCloudVisualization
 		public void LayoutApp_Should_GetStatistics()
 		{
 			filterMock2.Setup(filter => filter.Filter(It.IsAny<List<string>>())).Returns(words);
-			
+
 
 			layoutApp.Run(Input, Output, Top);
 

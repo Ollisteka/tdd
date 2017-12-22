@@ -79,32 +79,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CircularCloudLayouter.cs" />
-    <Compile Include="CircularCloudLayouter_Should.cs" />
-    <Compile Include="CloudDrawer.cs" />
-    <Compile Include="CloudDrawer_Should.cs" />
+    <Compile Include="Graphics\CircularCloudLayouter.cs" />
+    <Compile Include="Tests\CircularCloudLayouter_Should.cs" />
+    <Compile Include="Graphics\CloudDrawer.cs" />
+    <Compile Include="Tests\CloudDrawer_Should.cs" />
     <Compile Include="Interfaces\ITextFiltration.cs" />
     <Compile Include="Interfaces\IFileReader.cs" />
-    <Compile Include="LayoutApp.cs" />
-    <Compile Include="LayoutApp_Should.cs" />
+    <Compile Include="Graphics\LayoutApp.cs" />
+    <Compile Include="Tests\LayoutApp_Should.cs" />
     <Compile Include="Helpers\ResultExtension.cs" />
     <Compile Include="TextProcessing\DocReader.cs" />
     <Compile Include="TextProcessing\TxtReader.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="Helpers\Settings.cs" />
     <Compile Include="TextProcessing\FrequencyCounter.cs" />
     <Compile Include="Interfaces\ICloudDrawer.cs" />
     <Compile Include="Interfaces\ICloudLayouter.cs" />
     <Compile Include="Interfaces\IFrequencyCounter.cs" />
     <Compile Include="Helpers\LayouterHelper.cs" />
-    <Compile Include="LayoutForm.cs">
+    <Compile Include="Graphics\LayoutForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LayoutForm.Designer.cs">
+    <Compile Include="Graphics\LayoutForm.Designer.cs">
       <DependentUpon>LayoutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="T4DocoptNet.cs">
+    <Compile Include="Additional_Libraries\T4DocoptNet.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>T4DocoptNet.tt</DependentUpon>
@@ -155,15 +155,21 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="T4DocoptNet.tt.hooks.t4" />
+    <None Include="Additional_Libraries\T4DocoptNet.tt.hooks.t4" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Main.usage.txt" />
-    <None Include="T4DocoptNet.tt.settings.xml" />
-    <None Include="T4DocoptNet.tt">
+    <Content Include="Hunspellx64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hunspellx86.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Additional_Libraries\Main.usage.txt" />
+    <None Include="Additional_Libraries\T4DocoptNet.tt.settings.xml" />
+    <None Include="Additional_Libraries\T4DocoptNet.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>T4DocoptNet.cs</LastGenOutput>
     </None>
@@ -185,16 +191,13 @@
     <Content Include="books\random.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Hunspellx64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Hunspellx86.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Content Include="Images\13.bmp" />
     <Content Include="Images\24.bmp" />
     <Content Include="Images\39.bmp" />
     <Content Include="Images\52.bmp" />
+    <Content Include="Images\buratino.bmp" />
+    <Content Include="Images\game.bmp" />
+    <Content Include="Images\koperfild.bmp" />
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>

@@ -11,8 +11,9 @@ namespace TagsCloudVisualization.TextProcessing
 		public IEnumerable<string> Filter(IEnumerable<string> content)
 		{
 			var solutiondir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-			var hunspell = ResultExtension.Of(() => new Hunspell(
-					solutiondir + "//dictionaries//ru_RU.aff", solutiondir + "//dictionaries//ru_RU.dic"))
+			var affFile = Path.Combine(solutiondir, "dictionaries", "ru_RU.aff");
+			var dicFile = Path.Combine(solutiondir, "dictionaries", "ru_RU.dic");
+			var hunspell = ResultExtension.Of(() => new Hunspell(affFile, dicFile))
 				.RefineError("Something went wrong in a Hunspell Filter: ");
 			if (!hunspell.IsSuccess)
 				LayoutApp.ExitWithError(hunspell.Error);
