@@ -10,7 +10,7 @@ namespace TagsCloudVisualization
 {
 	internal static class Program
 	{
-		private const string Usage = @"Tags Cloud Visualization. Supports only Rissin for now.
+		private const string Usage = @"Tags Cloud Visualization. Supports only Russin for now.
 
 	Usage:
 	  TagsCloudVisualization.exe <inputfile>
@@ -47,7 +47,7 @@ namespace TagsCloudVisualization
 			var minFont = arguments["--lower"].AsInt;
 			var maxFont = arguments["--upper"].AsInt;
 
-			CheckForFilesExistance(inputFile, outputFile);
+			CheckForFilesExistance(inputFile);
 			if (topWords <= 0)
 				LayoutApp.ExitWithError($"The amount of words to print should be positive. You had: {topWords}");
 
