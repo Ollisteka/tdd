@@ -1,7 +1,15 @@
-﻿# Облако тегов (пока без слов)
+﻿# Облако тегов
 
-Примеры раскладки:
+##### Примеры раскладки:
 
-![24 words](https://raw.githubusercontent.com/Ollisteka/tdd/master/TagsCloudVisualization/Images/24.bmp)
-![39 words](https://raw.githubusercontent.com/Ollisteka/tdd/master/TagsCloudVisualization/Images/39.bmp)
-![52 words](https://raw.githubusercontent.com/Ollisteka/tdd/master/TagsCloudVisualization/Images/52.bmp)
+- Буратино
+
+![Буратино](https://raw.githubusercontent.com/Ollisteka/tdd/master/TagsCloudVisualization/Images/buratino.bmp)
+- - - 
+- Игра Престолов
+
+![Игра престолов](https://raw.githubusercontent.com/Ollisteka/tdd/master/TagsCloudVisualization/Images/game.bmp)
+- - - 
+- Коперфильд
+
+![Коперфильд](https://raw.githubusercontent.com/Ollisteka/tdd/master/TagsCloudVisualization/Images/koperfild.bmp)
