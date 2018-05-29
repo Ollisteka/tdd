@@ -10,7 +10,8 @@ using TagsCloudVisualization.Interfaces;
 namespace TagsCloudVisualization
 {
 	public class CloudDrawer : ICloudDrawer
-	{
+    {
+        private static Random rnd = new Random();
 		private const int AdditionalHeight = 55;
 		private const int AdditionalWidth = 55;
 		private readonly ICloudLayouter layouter;
@@ -48,8 +49,9 @@ namespace TagsCloudVisualization
 				{
 					var shiftedRectangle = new Rectangle(word.Value.X + OffsetX, word.Value.Y + OffsetY,
 						word.Value.Width, word.Value.Height);
-					g.DrawString(word.Key, new Font(FontFamily.GenericSansSerif, wordsFonts[word.Key]),
-						new SolidBrush(Color.Black), shiftedRectangle);
+                    var index = rnd.Next(settings.TagColors.Length);
+                    g.DrawString(word.Key, new Font(FontFamily.GenericSansSerif, wordsFonts[word.Key]),
+						new SolidBrush(settings.TagColors[index]), shiftedRectangle);
 				}
 			}
 			return result;

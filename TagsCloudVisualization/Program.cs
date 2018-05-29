@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
 using Autofac;
@@ -14,17 +17,18 @@ namespace TagsCloudVisualization
 
 	Usage:
 	  TagsCloudVisualization.exe <inputfile>
-	  TagsCloudVisualization.exe [-t NUM | --top=NUM] [-o FILE] [--min=NUM] [--max=NUM] [--lower=NUM] [--upper=NUM] <inputfile>
+	  TagsCloudVisualization.exe [-t NUM | --top=NUM] [-o FILE] [--min=NUM] [--max=NUM] [--lower=NUM] [--upper=NUM] [--color=COL...] <inputfile>
 	  TagsCloudVisualization.exe (-h | --help)
 
 	Options:
-	  -o FILE            Specify output file. 
-	  --min=NUM          Specify the minimum words'length [default: 3]
-	  --max=NUM          Specify the maximum words'length [default: 100]
-	  --lower=NUM        Specify the minimum words'font size [default: 15]
-	  --upper=Num        Specify the maximum words'font size  [default: 35]
-	  -t NUM --top=NUM   Specify how many words to show [default: 50]
-	  -h --help          Show this screen.
+	  -o FILE                       Specify output file. 
+	  --min=NUM                     Specify the minimum words'length [default: 3]
+	  --max=NUM                     Specify the maximum words'length [default: 100]
+	  --lower=NUM                   Specify the minimum words'font size [default: 15]
+	  --upper=Num                   Specify the maximum words'font size  [default: 35]
+	  -t NUM --top=NUM              Specify how many words to show [default: 50]
+	  -c COL ... --color=COL ...   Specify what colors to use for tag's font
+	  -h --help                     Show this screen.
 
 	";
 
@@ -47,13 +51,27 @@ namespace TagsCloudVisualization
 			var minFont = arguments["--lower"].AsInt;
 			var maxFont = arguments["--upper"].AsInt;
 
+            var colorsNames = arguments["--color"]?.AsList;
+            var colors = InitColors(colorsNames);
 			CheckForFilesExistance(inputFile);
 			if (topWords <= 0)
 				LayoutApp.ExitWithError($"The amount of words to print should be positive. You had: {topWords}");
-
-			CreateApp().Run(inputFile, outputFile, topWords, minLength, maxLength, minFont, maxFont);
+            
+            CreateApp().Run(inputFile, outputFile, colors, topWords, minLength, maxLength, minFont, maxFont);
 		}
 
+        private static Color[] InitColors(ArrayList colorsNames)
+        {
+            var brushes = new List<Color> { Color.Blue, Color.Black, Color.Red };
+            if (colorsNames != null)
+            {
+                brushes = new List<Color>();
+                foreach (var color in colorsNames)
+                    brushes.Add(Color.FromName(color.ToString()));
+            }
+
+            return brushes.ToArray();
+        }
 
 		private static void CheckForFilesExistance(params string[] filenames)
 		{

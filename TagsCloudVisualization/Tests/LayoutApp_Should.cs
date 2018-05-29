@@ -84,7 +84,7 @@ namespace TagsCloudVisualization
 			filterMock2.Setup(filter => filter.Filter(It.IsAny<List<string>>())).Returns(words);
 
 
-			layoutApp.Run(Input, Output, Top);
+			layoutApp.Run(Input, Output, top:Top);
 
 			frequencyCounterMock.Verify(stat => stat.MakeFrequencyStatistics(words, Top), Times.Once);
 		}
