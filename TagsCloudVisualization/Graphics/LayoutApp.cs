@@ -9,14 +9,14 @@ namespace TagsCloudVisualization
 {
     internal class LayoutApp
     {
-        private readonly IEnumerable<ITextFiltration> filtrations;
+        private readonly IEnumerable<ITextFilter> filtrations;
         private readonly IFrequencyCounter frequencyCounter;
         private readonly ICloudDrawer layoutDrawer;
         private readonly LayoutForm layoutForm;
         private readonly IEnumerable<IFileReader> readers;
         private readonly ISettings settings;
 
-        public LayoutApp(IEnumerable<ITextFiltration> filtrations, IFrequencyCounter frequencyCounter,
+        public LayoutApp(IEnumerable<ITextFilter> filtrations, IFrequencyCounter frequencyCounter,
             ICloudDrawer layoutDrawer, LayoutForm layoutForm, ISettings settings, IEnumerable<IFileReader> readers)
         {
             this.filtrations = filtrations;

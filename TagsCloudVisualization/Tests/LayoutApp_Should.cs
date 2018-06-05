@@ -15,8 +15,8 @@ namespace TagsCloudVisualization
 		{
 			words = new List<string> {"Hello", "world"};
 			statistics = words.ToDictionary(key => key, val => 10);
-			filterMock1 = new Mock<ITextFiltration>();
-			filterMock2 = new Mock<ITextFiltration>();
+			filterMock1 = new Mock<ITextFilter>();
+			filterMock2 = new Mock<ITextFilter>();
 
 			readerMock1 = new Mock<IFileReader>();
 			readerMock1.Setup(reader => reader.TryGetText(Input)).Returns(Result.Ok(words));
@@ -40,13 +40,13 @@ namespace TagsCloudVisualization
 		private const int Top = 5;
 		private LayoutApp layoutApp;
 		private Mock<IFrequencyCounter> frequencyCounterMock;
-		private Mock<ITextFiltration> filterMock1;
+		private Mock<ITextFilter> filterMock1;
 		private Mock<ICloudDrawer> drawerMock;
 		private Mock<LayoutForm> formMock;
 		private Mock<ISettings> settingsMock;
 		private Mock<IFileReader> readerMock1;
 		private Mock<IFileReader> readerMock2;
-		private Mock<ITextFiltration> filterMock2;
+		private Mock<ITextFilter> filterMock2;
 		private IEnumerable<string> words;
 		private Dictionary<string, int> statistics;
 
