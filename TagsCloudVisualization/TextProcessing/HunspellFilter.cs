@@ -6,13 +6,13 @@ using TagsCloudVisualization.Interfaces;
 
 namespace TagsCloudVisualization.TextProcessing
 {
-	internal class HunspellFilter : ITextFiltration
+	internal class HunspellFilter : ITextFilter
 	{
 		public IEnumerable<string> Filter(IEnumerable<string> content)
 		{
 			var solutiondir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-			var affFile = Path.Combine(solutiondir, "dictionaries", "ru_RU.aff");
-			var dicFile = Path.Combine(solutiondir, "dictionaries", "ru_RU.dic");
+			var affFile = Path.Combine(solutiondir, "dictionaries", "en_EN.aff");
+			var dicFile = Path.Combine(solutiondir, "dictionaries", "en_EN.dic");
 			var hunspell = ResultExtension.Of(() => new Hunspell(affFile, dicFile))
 				.RefineError("Something went wrong in a Hunspell Filter: ");
 			if (!hunspell.IsSuccess)

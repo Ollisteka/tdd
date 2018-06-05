@@ -4,7 +4,7 @@ using TagsCloudVisualization.Interfaces;
 
 namespace TagsCloudVisualization.TextProcessing
 {
-	internal class LongWordsFilter : ITextFiltration
+	internal class LongWordsFilter : ITextFilter
 	{
 		private readonly ISettings settings;
 

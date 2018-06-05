@@ -53,6 +53,21 @@
     <Reference Include="FluentAssertions.Core, Version=4.17.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssertions.4.17.0\lib\net45\FluentAssertions.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Caching.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Caching.Memory, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Caching.Memory.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Options.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Primitives.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="Moq, Version=4.7.145.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.7.145\lib\net45\Moq.dll</HintPath>
     </Reference>
@@ -61,6 +76,9 @@
     </Reference>
     <Reference Include="nunit.framework, Version=3.5.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpNL, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Knuppe.SharpNL.1.3.0\lib\netstandard2.0\SharpNL.dll</HintPath>
     </Reference>
     <Reference Include="Spire.Doc, Version=6.0.63.4040, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
       <HintPath>..\packages\Spire.Doc.6.0.63\lib\net40\Spire.Doc.dll</HintPath>
@@ -73,6 +91,25 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Drawing.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Drawing.Common.4.5.0-rc1\lib\net461\System.Drawing.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.4.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.AccessControl, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.AccessControl.4.4.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Permissions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Permissions.4.4.0\lib\net461\System.Security.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.4.4.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -80,15 +117,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Graphics\CircularCloudLayouter.cs" />
+    <Compile Include="Helpers\Language.cs" />
     <Compile Include="Tests\CircularCloudLayouter_Should.cs" />
     <Compile Include="Graphics\CloudDrawer.cs" />
     <Compile Include="Tests\CloudDrawer_Should.cs" />
-    <Compile Include="Interfaces\ITextFiltration.cs" />
+    <Compile Include="Interfaces\ITextFilter.cs" />
     <Compile Include="Interfaces\IFileReader.cs" />
     <Compile Include="Graphics\LayoutApp.cs" />
     <Compile Include="Tests\LayoutApp_Should.cs" />
     <Compile Include="Helpers\ResultExtension.cs" />
     <Compile Include="TextProcessing\DocReader.cs" />
+    <Compile Include="TextProcessing\PartOfSpeechFilter.cs" />
     <Compile Include="TextProcessing\TxtReader.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="TextProcessing\FrequencyCounter.cs" />
@@ -128,6 +167,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="books\test.pptx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="dictionaries\en-pos-maxent.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="dictionaries\en_EN.aff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="dictionaries\en_EN.dic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="dictionaries\Russian-English.aff">
@@ -181,6 +229,9 @@
     <Content Include="books\buratino.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="books\dance.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="books\gameofthrones.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -204,6 +255,7 @@
     <Content Include="Images\39.bmp" />
     <Content Include="Images\52.bmp" />
     <Content Include="Images\buratino.bmp" />
+    <Content Include="Images\colored_filtered_en.bmp" />
     <Content Include="Images\game.bmp" />
     <Content Include="Images\koperfild.bmp" />
     <Content Include="README.md" />

@@ -13,7 +13,7 @@ namespace TagsCloudVisualization
 {
 	internal static class Program
 	{
-		private const string Usage = @"Tags Cloud Visualization. Supports only Russin for now.
+		private const string Usage = @"Tags Cloud Visualization. Supports only Russian for now.
 
 	Usage:
 	  TagsCloudVisualization.exe <inputfile>
@@ -87,7 +87,7 @@ namespace TagsCloudVisualization
 
 			builder
 				.RegisterAssemblyTypes(assembly)
-				.AssignableTo<ITextFiltration>()
+				.AssignableTo<ITextFilter>()
 				.AsImplementedInterfaces()
 				.SingleInstance();
 
@@ -100,8 +100,6 @@ namespace TagsCloudVisualization
 			builder.RegisterType<Settings>()
 				.As<ISettings>()
 				.SingleInstance();
-
-			builder.RegisterType<DocReader>().As<IFileReader>();
 
 			builder.RegisterType<CircularCloudLayouter>().As<ICloudLayouter>();
 			builder.RegisterType<CloudDrawer>().As<ICloudDrawer>();
