@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Reflection;
 using System.Text;
+using TagsCloudVisualization.Helpers;
 using TagsCloudVisualization.Interfaces;
 
 namespace TagsCloudVisualization
@@ -12,10 +13,20 @@ namespace TagsCloudVisualization
         private int maxWordLength = 100;
         private int minWordFont = 3;
         private int minWordLength = 3;
-
+        private Language lang;
         private PropertyInfo[] propertyInfo;
         public Color[] TagColors { get; set; } = { Color.Blue, Color.Black, Color.Red};
 
+        public Language Language
+        {
+            get => lang;
+            set
+            {
+                if (value != Language.En && value != Language.Ru)
+                    throw new ArgumentException("This language is not supported!");
+                lang = value;
+            }
+        }
 
         public int MaxWordLength
         {

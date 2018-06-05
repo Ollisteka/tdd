@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using TagsCloudVisualization.Helpers;
 
 namespace TagsCloudVisualization.Interfaces
 {
@@ -11,7 +12,7 @@ namespace TagsCloudVisualization.Interfaces
         int MinWordFont { get; set; }
 
         int MaxWordFont { get; set; }
-
+        Language Language { get; set; }
         Point CenterPoint { get; set; }
         Color[] TagColors { get; set; }
     }
